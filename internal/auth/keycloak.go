@@ -1,4 +1,4 @@
-package config
+package auth
 
 import (
 	"context"
@@ -7,6 +7,8 @@ import (
 )
 
 type KeycloakClient interface {
+	GetUserByID(userID string) (domain.User, error)
+	LoginUser(email, password string) (*gocloak.JWT, error)
 }
 
 type keycloakClient struct {
@@ -36,8 +38,8 @@ func NewKeycloakClient(url, clientID, clientSecret, realm string) (KeycloakClien
 	}, nil
 }
 
-// GetUserByID solicita a Keycloak los datos del usuario con el userID dado.
-func (k *keycloakClient) GetUserByID(userID string) (domain.User, error) {
+// GetUserByID solicita a Keycloak los datos del usuario con el userID dado. El userID es el autogenerado por Keycloak.
+func (k keycloakClient) GetUserByID(userID string) (domain.User, error) {
 	kcUser, err := k.client.GetUserByID(k.ctx, k.jwt.AccessToken, k.realm, userID)
 	if err != nil {
 		return domain.User{}, err
@@ -46,7 +48,7 @@ func (k *keycloakClient) GetUserByID(userID string) (domain.User, error) {
 }
 
 // LoginUser realiza el inicio de sesión en Keycloak y retorna el JWT de la sesión.
-func (k *keycloakClient) LoginUser(email, password string) (*gocloak.JWT, error) {
+func (k keycloakClient) LoginUser(email, password string) (*gocloak.JWT, error) {
 	return k.client.Login(k.ctx, k.clientID, k.clientSecret, k.realm, email, password)
 }
 

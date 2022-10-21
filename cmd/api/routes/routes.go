@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"ctd-money-house/internal/auth"
 	"database/sql"
 
 	"ctd-money-house/cmd/api/handlers"
@@ -43,5 +44,19 @@ func (r *router) buildUserRoutes() {
 	{
 		users.GET("/:id", middleware.TokenValidation(), handler.GetUserByID())
 		users.GET("/", middleware.TokenValidation(), handler.GetAllUsers())
+	}
+}
+
+func (r *router) buildAuthRoutes(keycloakUrl, clientId, clientSecret, realm string) {
+	keycloakClient, err := auth.NewKeycloakClient(keycloakUrl, clientId, clientSecret, realm)
+	// Instanciar un KeycloakClient puede fallar si la petición del cliente a Keycloak falla.
+	if err != nil {
+		panic(err.Error())
+	}
+	service := auth.NewAuthService(keycloakClient)
+	handler := handlers.NewAuthHandler(service)
+	auths := r.rg.Group("/auth")
+	{
+		auths.POST("/login", handler.Login())
 	}
 }

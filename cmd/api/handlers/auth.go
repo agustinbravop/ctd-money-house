@@ -30,5 +30,12 @@ func (h *authHandler) Login() gin.HandlerFunc {
 			web.Failure(ctx, http.StatusBadRequest, errors.New("bad request"))
 		}
 
+		jwt, err := h.s.LoginUser(body.Email, body.Password)
+		if err != nil {
+			// TODO: con (err != nil) no se puede diferenciar si el error fue del usuario o del servidor.
+			// TODO: sería mejor si pudieramos dar un mensaje de error más personalizado.
+			web.Failure(ctx, http.StatusBadRequest, errors.New("wrong password or email"))
+		}
+		web.Success(ctx, http.StatusOK, jwt)
 	}
 }

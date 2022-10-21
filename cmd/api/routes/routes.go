@@ -15,15 +15,17 @@ type Router interface {
 }
 
 type router struct {
-	r  *gin.Engine
-	rg *gin.RouterGroup
-	db *sql.DB
+	r        *gin.Engine
+	rg       *gin.RouterGroup
+	db       *sql.DB
+	kcClient auth.KeycloakClient
 }
 
-func NewRouter(r *gin.Engine, db *sql.DB) Router {
+func NewRouter(r *gin.Engine, db *sql.DB, kcClient auth.KeycloakClient) Router {
 	return &router{
-		r:  r,
-		db: db,
+		r:        r,
+		db:       db,
+		kcClient: kcClient,
 	}
 }
 
@@ -47,13 +49,8 @@ func (r *router) buildUserRoutes() {
 	}
 }
 
-func (r *router) buildAuthRoutes(keycloakUrl, clientId, clientSecret, realm string) {
-	// Instanciar un KeycloakClient puede fallar si la petición del cliente a Keycloak falla.
-	keycloakClient, err := auth.NewKeycloakClient(keycloakUrl, clientId, clientSecret, realm)
-	if err != nil {
-		panic(err.Error())
-	}
-	service := auth.NewAuthService(keycloakClient)
+func (r *router) buildAuthRoutes() {
+	service := auth.NewAuthService(r.kcClient)
 	handler := handlers.NewAuthHandler(service)
 
 	auths := r.rg.Group("/auth")

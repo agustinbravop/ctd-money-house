@@ -48,13 +48,14 @@ func (r *router) buildUserRoutes() {
 }
 
 func (r *router) buildAuthRoutes(keycloakUrl, clientId, clientSecret, realm string) {
-	keycloakClient, err := auth.NewKeycloakClient(keycloakUrl, clientId, clientSecret, realm)
 	// Instanciar un KeycloakClient puede fallar si la petición del cliente a Keycloak falla.
+	keycloakClient, err := auth.NewKeycloakClient(keycloakUrl, clientId, clientSecret, realm)
 	if err != nil {
 		panic(err.Error())
 	}
 	service := auth.NewAuthService(keycloakClient)
 	handler := handlers.NewAuthHandler(service)
+
 	auths := r.rg.Group("/auth")
 	{
 		auths.POST("/login", handler.Login())

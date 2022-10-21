@@ -1,9 +1,8 @@
 package user
 
 import (
-	"database/sql"
-
 	"ctd-money-house/internal/domain"
+	"database/sql"
 )
 
 type Repository interface {
@@ -30,12 +29,12 @@ func (r *repository) GetByID(id int) (domain.User, error) {
 	row := r.db.QueryRow("SELECT * FROM users WHERE id = ?", id)
 	err := row.Scan(
 		&user.ID,
+		&user.KeycloakID,
 		&user.Name,
 		&user.LastName,
 		&user.Dni,
 		&user.Email,
 		&user.Telephone,
-		&user.Password,
 		&user.Cvu,
 		&user.Email,
 	)
@@ -56,12 +55,12 @@ func (r *repository) GetAll() ([]domain.User, error) {
 		user := domain.User{}
 		_ = rows.Scan(
 			&user.ID,
+			&user.KeycloakID,
 			&user.Name,
 			&user.LastName,
 			&user.Dni,
 			&user.Email,
 			&user.Telephone,
-			&user.Password,
 			&user.Cvu,
 			&user.Email)
 		users = append(users, user)

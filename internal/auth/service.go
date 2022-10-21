@@ -15,13 +15,13 @@ type service struct {
 }
 
 func NewAuthService(kc KeycloakClient) Service {
-	return service{kc}
+	return &service{kc}
 }
 
-func (s service) LoginUser(email, password string) (*gocloak.JWT, error) {
+func (s *service) LoginUser(email, password string) (*gocloak.JWT, error) {
 	return s.kc.LoginUser(email, password)
 }
 
-func (s service) GetUserByKeycloakID(userID string) (domain.User, error) {
+func (s *service) GetUserByKeycloakID(userID string) (domain.User, error) {
 	return s.kc.GetUserByID(userID)
 }

@@ -26,10 +26,10 @@ func NewKeycloakClient(url, clientID, clientSecret, realm string) (KeycloakClien
 	ctx := context.Background()
 	token, err := client.LoginClient(ctx, clientID, clientSecret, realm)
 	if err != nil {
-		return keycloakClient{}, err
+		return &keycloakClient{}, err
 	}
 
-	return keycloakClient{
+	return &keycloakClient{
 		jwt:          token,
 		client:       client,
 		clientSecret: clientSecret,
@@ -41,7 +41,7 @@ func NewKeycloakClient(url, clientID, clientSecret, realm string) (KeycloakClien
 
 // GetUserByID solicita a Keycloak los datos del usuario con el userID dado.
 // El userID es el string GUID autogenerado por Keycloak. Es distinto al domain.User.ID y no están relacionados.
-func (k keycloakClient) GetUserByID(userID string) (domain.User, error) {
+func (k *keycloakClient) GetUserByID(userID string) (domain.User, error) {
 	kcUser, err := k.client.GetUserByID(k.ctx, k.jwt.AccessToken, k.realm, userID)
 	if err != nil {
 		return domain.User{}, err
@@ -50,7 +50,7 @@ func (k keycloakClient) GetUserByID(userID string) (domain.User, error) {
 }
 
 // LoginUser realiza el inicio de sesión en Keycloak y retorna el JWT de la sesión.
-func (k keycloakClient) LoginUser(email, password string) (*gocloak.JWT, error) {
+func (k *keycloakClient) LoginUser(email, password string) (*gocloak.JWT, error) {
 	return k.client.Login(k.ctx, k.clientID, k.clientSecret, k.realm, email, password)
 }
 

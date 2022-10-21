@@ -5,8 +5,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/agustinbravop/ctd-money-house/internal/user"
-	"github.com/agustinbravop/ctd-money-house/pkg/web"
+	"ctd-money-house/internal/user"
+	"ctd-money-house/pkg/web"
 	"github.com/gin-gonic/gin"
 )
 

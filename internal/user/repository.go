@@ -3,7 +3,7 @@ package user
 import (
 	"database/sql"
 
-	"github.com/agustinbravop/ctd-money-house/internal/domain"
+	"ctd-money-house/internal/domain"
 )
 
 type Repository interface {

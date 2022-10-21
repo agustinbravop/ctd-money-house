@@ -3,9 +3,9 @@ package routes
 import (
 	"database/sql"
 
-	"github.com/agustinbravop/ctd-money-house/cmd/api/handlers"
-	"github.com/agustinbravop/ctd-money-house/cmd/api/middleware"
-	"github.com/agustinbravop/ctd-money-house/internal/user"
+	"ctd-money-house/cmd/api/handlers"
+	"ctd-money-house/cmd/api/middleware"
+	"ctd-money-house/internal/user"
 	"github.com/gin-gonic/gin"
 )
 

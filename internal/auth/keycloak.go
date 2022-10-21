@@ -20,6 +20,7 @@ type keycloakClient struct {
 	clientSecret string
 }
 
+// NewKeycloakClient instancia un KeycloakClient. Puede fallar si la petición de LoginClient a Keycloak falla.
 func NewKeycloakClient(url, clientID, clientSecret, realm string) (KeycloakClient, error) {
 	client := gocloak.NewClient(url)
 	ctx := context.Background()
@@ -38,7 +39,8 @@ func NewKeycloakClient(url, clientID, clientSecret, realm string) (KeycloakClien
 	}, nil
 }
 
-// GetUserByID solicita a Keycloak los datos del usuario con el userID dado. El userID es el autogenerado por Keycloak.
+// GetUserByID solicita a Keycloak los datos del usuario con el userID dado.
+// El userID es el string GUID autogenerado por Keycloak. Es distinto al domain.User.ID y no están relacionados.
 func (k keycloakClient) GetUserByID(userID string) (domain.User, error) {
 	kcUser, err := k.client.GetUserByID(k.ctx, k.jwt.AccessToken, k.realm, userID)
 	if err != nil {
@@ -54,9 +56,8 @@ func (k keycloakClient) LoginUser(email, password string) (*gocloak.JWT, error) 
 
 func toDomainUser(kcUser *gocloak.User) domain.User {
 	return domain.User{
-		Name:       *kcUser.FirstName,
-		LastName:   *kcUser.LastName,
-		Email:      *kcUser.Email,
-		KeycloakID: *kcUser.ID,
+		Name:     *kcUser.FirstName,
+		LastName: *kcUser.LastName,
+		Email:    *kcUser.Email,
 	}
 }

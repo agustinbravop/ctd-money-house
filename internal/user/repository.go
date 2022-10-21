@@ -29,7 +29,6 @@ func (r *repository) GetByID(id int) (domain.User, error) {
 	row := r.db.QueryRow("SELECT * FROM users WHERE id = ?", id)
 	err := row.Scan(
 		&user.ID,
-		&user.KeycloakID,
 		&user.Name,
 		&user.LastName,
 		&user.Dni,
@@ -55,7 +54,6 @@ func (r *repository) GetAll() ([]domain.User, error) {
 		user := domain.User{}
 		_ = rows.Scan(
 			&user.ID,
-			&user.KeycloakID,
 			&user.Name,
 			&user.LastName,
 			&user.Dni,

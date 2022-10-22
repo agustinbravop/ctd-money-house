@@ -41,18 +41,33 @@ func (h *authHandler) Login() gin.HandlerFunc {
 	}
 }
 
+// Logout recibe el Refresh Token a invalidar del usuario en el header Authorization.
+// Una vez invalidado el Refresh Token, el usuario no puede obtener nuevos Access Tokens.
 func (h *authHandler) Logout() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
-		var jwt auth.JWT
-		err := ctx.ShouldBindJSON(&jwt)
-		if err != nil {
-			web.Failure(ctx, http.StatusBadRequest, errors.New("failed to parse json body"))
+		refreshToken := ctx.GetHeader("Authorization")
+		if refreshToken == "" {
+			web.Failure(ctx, http.StatusBadRequest, errors.New("missing Authorization header"))
 		}
-
-		err = h.s.LogoutUser(jwt)
+		err := h.s.LogoutUser(refreshToken)
 		if err != nil {
 			web.Failure(ctx, http.StatusInternalServerError, errors.New("something went wrong"))
 		}
 		web.Success(ctx, http.StatusOK, nil)
+	}
+}
+
+// RefreshToken recibe el Refresh Token a utilizar en el header Authorization, y devuelve un nuevo JWT.
+func (h *authHandler) RefreshToken() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		refreshToken := ctx.GetHeader("Authorization")
+		if refreshToken == "" {
+			web.Failure(ctx, http.StatusBadRequest, errors.New("missing Authorization header"))
+		}
+		jwt, err := h.s.RefreshToken(refreshToken)
+		if err != nil {
+			web.Failure(ctx, http.StatusInternalServerError, errors.New("something went wrong"))
+		}
+		web.Success(ctx, http.StatusOK, jwt)
 	}
 }

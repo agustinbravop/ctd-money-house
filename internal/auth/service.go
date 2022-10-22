@@ -2,13 +2,13 @@ package auth
 
 import (
 	"ctd-money-house/internal/domain"
-	"github.com/Nerzal/gocloak/v12"
 )
 
 type Service interface {
-	LoginUser(email, password string) (*gocloak.JWT, error)
+	LoginUser(email, password string) (*JWT, error)
 	GetUserByKeycloakID(userID string) (domain.User, error)
-	LogoutUser(jwt JWT) error
+	LogoutUser(refreshToken string) error
+	RefreshToken(refreshToken string) (*JWT, error)
 }
 
 type service struct {
@@ -19,7 +19,7 @@ func NewAuthService(kc KeycloakClient) Service {
 	return &service{kc}
 }
 
-func (s *service) LoginUser(email, password string) (*gocloak.JWT, error) {
+func (s *service) LoginUser(email, password string) (*JWT, error) {
 	return s.kc.LoginUser(email, password)
 }
 
@@ -27,6 +27,10 @@ func (s *service) GetUserByKeycloakID(userID string) (domain.User, error) {
 	return s.kc.GetUserByID(userID)
 }
 
-func (s *service) LogoutUser(jwt JWT) error {
-	return s.kc.LogoutUser(jwt.RefreshToken)
+func (s *service) LogoutUser(refreshToken string) error {
+	return s.kc.LogoutUser(refreshToken)
+}
+
+func (s *service) RefreshToken(refreshToken string) (*JWT, error) {
+	return s.kc.RefreshToken(refreshToken)
 }

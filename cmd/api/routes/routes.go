@@ -32,6 +32,7 @@ func NewRouter(r *gin.Engine, db *sql.DB, kcClient auth.KeycloakClient) Router {
 func (r *router) MapRoutes() {
 	r.setGroup()
 	r.buildUserRoutes()
+	r.buildAuthRoutes()
 }
 
 func (r *router) setGroup() {
@@ -57,5 +58,6 @@ func (r *router) buildAuthRoutes() {
 	{
 		auths.POST("/login", handler.Login())
 		auths.POST("/logout", handler.Logout())
+		auths.GET("/refresh-token", handler.RefreshToken())
 	}
 }

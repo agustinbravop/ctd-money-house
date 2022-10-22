@@ -59,5 +59,6 @@ func (r *router) buildAuthRoutes() {
 		auths.POST("/login", handler.Login())
 		auths.POST("/logout", handler.Logout())
 		auths.GET("/refresh-token", handler.RefreshToken())
+		auths.POST("/register", handler.Register())
 	}
 }

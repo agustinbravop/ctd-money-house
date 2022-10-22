@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"ctd-money-house/internal/auth"
+	"ctd-money-house/internal/domain"
 	"ctd-money-house/pkg/web"
 	"errors"
 	"github.com/gin-gonic/gin"
@@ -18,6 +19,40 @@ func NewAuthHandler(s auth.Service) *authHandler {
 	}
 }
 
+// Register crea un nuevo usuario, y retorna el usuario creado.
+func (h *authHandler) Register() gin.HandlerFunc {
+	type RequestBody struct {
+		FirstName string `json:"firstName"`
+		LastName  string `json:"lastName"`
+		Email     string `json:"email"`
+		Password  string `json:"password"`
+		Dni       string `json:"dni"`
+		Telephone string `json:"telephone"`
+	}
+
+	return func(ctx *gin.Context) {
+		var body RequestBody
+		err := ctx.ShouldBindJSON(&body)
+		if err != nil {
+			web.Failure(ctx, http.StatusBadRequest, errors.New("failed to parse json body"))
+		}
+		user := domain.User{
+			Name:      body.FirstName,
+			LastName:  body.LastName,
+			Dni:       body.Dni,
+			Email:     body.Email,
+			Telephone: body.Telephone,
+		}
+		user, err = h.s.RegisterUser(user, body.Password)
+		if err != nil {
+			// TODO: personalizar mensaje de error si es que el email dado ya existe (debe ser único).
+			web.Failure(ctx, http.StatusInternalServerError, errors.New("something went wrong"))
+		}
+		web.Success(ctx, http.StatusCreated, user)
+	}
+}
+
+// Login devuelve un JWT al usuario.
 func (h *authHandler) Login() gin.HandlerFunc {
 	type RequestBody struct {
 		Email    string `json:"email"`
@@ -41,7 +76,7 @@ func (h *authHandler) Login() gin.HandlerFunc {
 	}
 }
 
-// Logout recibe el Refresh Token a invalidar del usuario en el header Authorization.
+// Logout recibe el Refresh Token a invalidar del usuario en el header 'Authorization'.
 // Una vez invalidado el Refresh Token, el usuario no puede obtener nuevos Access Tokens.
 func (h *authHandler) Logout() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
@@ -57,7 +92,7 @@ func (h *authHandler) Logout() gin.HandlerFunc {
 	}
 }
 
-// RefreshToken recibe el Refresh Token a utilizar en el header Authorization, y devuelve un nuevo JWT.
+// RefreshToken recibe el Refresh Token en el header 'Authorization', y devuelve un nuevo JWT.
 func (h *authHandler) RefreshToken() gin.HandlerFunc {
 	return func(ctx *gin.Context) {
 		refreshToken := ctx.GetHeader("Authorization")

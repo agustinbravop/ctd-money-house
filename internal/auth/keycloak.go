@@ -11,6 +11,8 @@ type KeycloakClient interface {
 	LoginUser(email, password string) (*JWT, error)
 	LogoutUser(refreshToken string) error
 	RefreshToken(refreshToken string) (*JWT, error)
+	CreateUser(user domain.User) (string, error)
+	SetPassword(userID, password string) error
 }
 
 type JWT = gocloak.JWT
@@ -43,14 +45,20 @@ func NewKeycloakClient(url, clientID, clientSecret, realm string) (KeycloakClien
 	}, nil
 }
 
-// GetUserByID solicita a Keycloak los datos del usuario con el userID dado.
-// El userID es el string GUID autogenerado por Keycloak. Es distinto al domain.User.ID y no están relacionados.
+// GetUserByID solicita los datos del usuario con el userID dado.
+// El userID es el string GUID autogenerado por Keycloak. Es distinto al el domain.User.ID.
 func (k *keycloakClient) GetUserByID(userID string) (domain.User, error) {
 	kcUser, err := k.client.GetUserByID(k.ctx, k.jwt.AccessToken, k.realm, userID)
 	if err != nil {
 		return domain.User{}, err
 	}
 	return toDomainUser(kcUser), nil
+}
+
+// CreateUser registra un nuevo usuario en Keycloak y devuelve su userID.
+func (k *keycloakClient) CreateUser(user domain.User) (string, error) {
+	kcUser := fromDomainUser(user)
+	return k.client.CreateUser(k.ctx, k.jwt.AccessToken, k.realm, kcUser)
 }
 
 // LoginUser realiza el inicio de sesión en Keycloak y retorna el JWT de la sesión.
@@ -68,10 +76,26 @@ func (k *keycloakClient) RefreshToken(refreshToken string) (*JWT, error) {
 	return k.client.RefreshToken(k.ctx, refreshToken, k.clientID, k.clientSecret, k.realm)
 }
 
+// SetPassword establece una nueva contraseña para el usuario con el userID dado.
+func (k *keycloakClient) SetPassword(userID, password string) error {
+	return k.client.SetPassword(k.ctx, k.jwt.AccessToken, userID, k.realm, password, false)
+}
+
 func toDomainUser(kcUser *gocloak.User) domain.User {
 	return domain.User{
 		Name:     *kcUser.FirstName,
 		LastName: *kcUser.LastName,
 		Email:    *kcUser.Email,
+	}
+}
+
+func fromDomainUser(user domain.User) gocloak.User {
+	emailVerified := true
+	return gocloak.User{
+		Username:      &user.Email,
+		EmailVerified: &emailVerified,
+		FirstName:     &user.Name,
+		LastName:      &user.LastName,
+		Email:         &user.Email,
 	}
 }

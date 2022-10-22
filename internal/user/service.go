@@ -1,6 +1,6 @@
 package user
 
-import "github.com/agustinbravop/ctd-money-house/internal/domain"
+import "ctd-money-house/internal/domain"
 
 type Service interface {
 	GetByID(id int) (domain.User, error)

@@ -1,13 +1,12 @@
 package handlers
 
 import (
+	"ctd-money-house/internal/user"
+	"ctd-money-house/pkg/web"
 	"errors"
+	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
-
-	"github.com/agustinbravop/ctd-money-house/internal/user"
-	"github.com/agustinbravop/ctd-money-house/pkg/web"
-	"github.com/gin-gonic/gin"
 )
 
 type userHandler struct {

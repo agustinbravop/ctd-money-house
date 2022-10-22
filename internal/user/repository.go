@@ -1,9 +1,8 @@
 package user
 
 import (
+	"ctd-money-house/internal/domain"
 	"database/sql"
-
-	"github.com/agustinbravop/ctd-money-house/internal/domain"
 )
 
 type Repository interface {
@@ -35,7 +34,6 @@ func (r *repository) GetByID(id int) (domain.User, error) {
 		&user.Dni,
 		&user.Email,
 		&user.Telephone,
-		&user.Password,
 		&user.Cvu,
 		&user.Email,
 	)
@@ -61,7 +59,6 @@ func (r *repository) GetAll() ([]domain.User, error) {
 			&user.Dni,
 			&user.Email,
 			&user.Telephone,
-			&user.Password,
 			&user.Cvu,
 			&user.Email)
 		users = append(users, user)

@@ -1,11 +1,12 @@
 package routes
 
 import (
+	"ctd-money-house/internal/auth"
 	"database/sql"
 
-	"github.com/agustinbravop/ctd-money-house/cmd/api/handlers"
-	"github.com/agustinbravop/ctd-money-house/cmd/api/middleware"
-	"github.com/agustinbravop/ctd-money-house/internal/user"
+	"ctd-money-house/cmd/api/handlers"
+	"ctd-money-house/cmd/api/middleware"
+	"ctd-money-house/internal/user"
 	"github.com/gin-gonic/gin"
 )
 
@@ -14,15 +15,17 @@ type Router interface {
 }
 
 type router struct {
-	r  *gin.Engine
-	rg *gin.RouterGroup
-	db *sql.DB
+	r        *gin.Engine
+	rg       *gin.RouterGroup
+	db       *sql.DB
+	kcClient auth.KeycloakClient
 }
 
-func NewRouter(r *gin.Engine, db *sql.DB) Router {
+func NewRouter(r *gin.Engine, db *sql.DB, kcClient auth.KeycloakClient) Router {
 	return &router{
-		r:  r,
-		db: db,
+		r:        r,
+		db:       db,
+		kcClient: kcClient,
 	}
 }
 
@@ -43,5 +46,15 @@ func (r *router) buildUserRoutes() {
 	{
 		users.GET("/:id", middleware.TokenValidation(), handler.GetUserByID())
 		users.GET("/", middleware.TokenValidation(), handler.GetAllUsers())
+	}
+}
+
+func (r *router) buildAuthRoutes() {
+	service := auth.NewAuthService(r.kcClient)
+	handler := handlers.NewAuthHandler(service)
+
+	auths := r.rg.Group("/auth")
+	{
+		auths.POST("/login", handler.Login())
 	}
 }

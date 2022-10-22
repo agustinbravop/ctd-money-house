@@ -8,8 +8,11 @@ import (
 
 type KeycloakClient interface {
 	GetUserByID(userID string) (domain.User, error)
-	LoginUser(email, password string) (*gocloak.JWT, error)
+	LoginUser(email, password string) (*JWT, error)
+	LogoutUser(refreshToken string) error
 }
+
+type JWT = gocloak.JWT
 
 type keycloakClient struct {
 	jwt          *gocloak.JWT
@@ -18,6 +21,10 @@ type keycloakClient struct {
 	realm        string
 	clientID     string
 	clientSecret string
+}
+
+func (k *keycloakClient) LogoutUser(refreshToken string) error {
+	return k.client.Logout(k.ctx, k.clientID, k.clientSecret, k.realm, refreshToken)
 }
 
 // NewKeycloakClient instancia un KeycloakClient. Puede fallar si la petición de LoginClient a Keycloak falla.
@@ -50,7 +57,7 @@ func (k *keycloakClient) GetUserByID(userID string) (domain.User, error) {
 }
 
 // LoginUser realiza el inicio de sesión en Keycloak y retorna el JWT de la sesión.
-func (k *keycloakClient) LoginUser(email, password string) (*gocloak.JWT, error) {
+func (k *keycloakClient) LoginUser(email, password string) (*JWT, error) {
 	return k.client.Login(k.ctx, k.clientID, k.clientSecret, k.realm, email, password)
 }
 

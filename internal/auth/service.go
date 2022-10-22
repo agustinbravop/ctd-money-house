@@ -8,6 +8,7 @@ import (
 type Service interface {
 	LoginUser(email, password string) (*gocloak.JWT, error)
 	GetUserByKeycloakID(userID string) (domain.User, error)
+	LogoutUser(jwt JWT) error
 }
 
 type service struct {
@@ -24,4 +25,8 @@ func (s *service) LoginUser(email, password string) (*gocloak.JWT, error) {
 
 func (s *service) GetUserByKeycloakID(userID string) (domain.User, error) {
 	return s.kc.GetUserByID(userID)
+}
+
+func (s *service) LogoutUser(jwt JWT) error {
+	return s.kc.LogoutUser(jwt.RefreshToken)
 }

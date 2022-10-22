@@ -23,11 +23,12 @@ func (h *authHandler) Login() gin.HandlerFunc {
 		Email    string `json:"email"`
 		Password string `json:"password"`
 	}
+
 	return func(ctx *gin.Context) {
 		var body RequestBody
 		err := ctx.ShouldBindJSON(&body)
 		if err != nil {
-			web.Failure(ctx, http.StatusBadRequest, errors.New("bad request"))
+			web.Failure(ctx, http.StatusBadRequest, errors.New("failed to parse json body"))
 		}
 
 		jwt, err := h.s.LoginUser(body.Email, body.Password)
@@ -37,5 +38,21 @@ func (h *authHandler) Login() gin.HandlerFunc {
 			web.Failure(ctx, http.StatusBadRequest, errors.New("wrong password or email"))
 		}
 		web.Success(ctx, http.StatusOK, jwt)
+	}
+}
+
+func (h *authHandler) Logout() gin.HandlerFunc {
+	return func(ctx *gin.Context) {
+		var jwt auth.JWT
+		err := ctx.ShouldBindJSON(&jwt)
+		if err != nil {
+			web.Failure(ctx, http.StatusBadRequest, errors.New("failed to parse json body"))
+		}
+
+		err = h.s.LogoutUser(jwt)
+		if err != nil {
+			web.Failure(ctx, http.StatusInternalServerError, errors.New("something went wrong"))
+		}
+		web.Success(ctx, http.StatusOK, nil)
 	}
 }

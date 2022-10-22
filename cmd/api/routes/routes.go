@@ -56,5 +56,6 @@ func (r *router) buildAuthRoutes() {
 	auths := r.rg.Group("/auth")
 	{
 		auths.POST("/login", handler.Login())
+		auths.POST("/logout", handler.Logout())
 	}
 }

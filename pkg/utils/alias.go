@@ -14,7 +14,6 @@ func GenerateAlias() string {
 	if err != nil {
 		log.Fatal(err)
 	}
-
 	scanner := bufio.NewScanner(file)
 	words := []string{}
 
@@ -31,9 +30,7 @@ func GenerateAlias() string {
 		pick := words[randomIndex]
 		selectedWords = append(selectedWords, pick)
 	}
-
 	items := strings.Join(selectedWords, ".")
-
 	// fmt.Println(strings.ToUpper(items))
 	return strings.ToUpper(items)
 }

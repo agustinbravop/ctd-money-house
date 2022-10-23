@@ -71,7 +71,8 @@ func (k *keycloakClient) LogoutUser(refreshToken string) error {
 	return k.client.Logout(k.ctx, k.clientID, k.clientSecret, k.realm, refreshToken)
 }
 
-// RefreshToken solicita un JWT nuevo para el usuario.
+// RefreshToken solicita un JWT nuevo para el usuario. Keycloak genera un nuevo Access Token.
+// Por seguridad usa Refresh Token Rotation y genera un nuevo Refresh Token, invalidando el anterior.
 func (k *keycloakClient) RefreshToken(refreshToken string) (*JWT, error) {
 	return k.client.RefreshToken(k.ctx, refreshToken, k.clientID, k.clientSecret, k.realm)
 }
@@ -90,6 +91,7 @@ func toDomainUser(kcUser *gocloak.User) domain.User {
 }
 
 func fromDomainUser(user domain.User) gocloak.User {
+	userEnabled := true
 	emailVerified := true
 	return gocloak.User{
 		Username:      &user.Email,
@@ -97,5 +99,6 @@ func fromDomainUser(user domain.User) gocloak.User {
 		FirstName:     &user.Name,
 		LastName:      &user.LastName,
 		Email:         &user.Email,
+		Enabled:       &userEnabled,
 	}
 }

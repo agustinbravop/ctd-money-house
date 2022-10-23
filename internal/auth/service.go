@@ -28,9 +28,9 @@ func (s *service) RegisterUser(user domain.User, password string) (domain.User, 
 	if err != nil {
 		return domain.User{}, err
 	}
-	// TODO: Llamar al UserService para crear el usuario en el dominio.
+	// TODO: Llamar al UserService para crear el usuario en el dominio (que debería cargar user.Alias y user.Cvu y devolverlo.
 	// TODO: Si crear el usuario en el dominio falla, se puede usar el userID para eliminar al usuario de Keycloak (revertir la operación).
-	return domain.User{}, nil
+	return user, nil
 }
 
 func (s *service) LoginUser(email, password string) (*JWT, error) {

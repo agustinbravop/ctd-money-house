@@ -12,6 +12,7 @@ import (
 
 type Router interface {
 	MapRoutes()
+	Start()
 }
 
 type router struct {
@@ -26,6 +27,13 @@ func NewRouter(r *gin.Engine, db *sql.DB, kcClient auth.KeycloakClient) Router {
 		r:        r,
 		db:       db,
 		kcClient: kcClient,
+	}
+}
+
+func (r *router) Start() {
+	err := r.r.Run(":8082")
+	if err != nil {
+		panic(err)
 	}
 }
 
@@ -58,7 +66,7 @@ func (r *router) buildAuthRoutes() {
 	{
 		auths.POST("/login", handler.Login())
 		auths.POST("/logout", handler.Logout())
-		auths.GET("/refresh-token", handler.RefreshToken())
+		auths.POST("/token", handler.RefreshToken())
 		auths.POST("/register", handler.Register())
 	}
 }

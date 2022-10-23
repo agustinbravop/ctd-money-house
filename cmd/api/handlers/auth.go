@@ -35,6 +35,7 @@ func (h *authHandler) Register() gin.HandlerFunc {
 		err := ctx.ShouldBindJSON(&body)
 		if err != nil {
 			web.Failure(ctx, http.StatusBadRequest, errors.New("failed to parse json body"))
+			return
 		}
 		user := domain.User{
 			Name:      body.FirstName,
@@ -47,12 +48,13 @@ func (h *authHandler) Register() gin.HandlerFunc {
 		if err != nil {
 			// TODO: personalizar mensaje de error si es que el email dado ya existe (debe ser único).
 			web.Failure(ctx, http.StatusInternalServerError, errors.New("something went wrong"))
+			return
 		}
 		web.Success(ctx, http.StatusCreated, user)
 	}
 }
 
-// Login devuelve un JWT al usuario.
+// Login devuelve un JWT con un Access Token y un Refresh Token válidos al usuario.
 func (h *authHandler) Login() gin.HandlerFunc {
 	type RequestBody struct {
 		Email    string `json:"email"`
@@ -64,13 +66,16 @@ func (h *authHandler) Login() gin.HandlerFunc {
 		err := ctx.ShouldBindJSON(&body)
 		if err != nil {
 			web.Failure(ctx, http.StatusBadRequest, errors.New("failed to parse json body"))
+			return
 		}
 
 		jwt, err := h.s.LoginUser(body.Email, body.Password)
 		if err != nil {
-			// TODO: con (err != nil) no se puede diferenciar si el error fue del usuario o del servidor.
+			// TODO: con (err != nil) no se puede diferenciar cual fue el error.
 			// TODO: sería mejor si pudieramos dar un mensaje de error más personalizado.
+			println(err.Error())
 			web.Failure(ctx, http.StatusBadRequest, errors.New("wrong password or email"))
+			return
 		}
 		web.Success(ctx, http.StatusOK, jwt)
 	}
@@ -80,7 +85,7 @@ func (h *authHandler) Login() gin.HandlerFunc {
 // Una vez invalidado el Refresh Token, el usuario no puede obtener nuevos Access Tokens.
 func (h *authHandler) Logout() gin.HandlerFunc {
 	type RequestBody struct {
-		Token string `json:"token"`
+		RefreshToken string `json:"refreshToken"`
 	}
 
 	return func(ctx *gin.Context) {
@@ -88,37 +93,34 @@ func (h *authHandler) Logout() gin.HandlerFunc {
 		err := ctx.ShouldBindJSON(&body)
 		if err != nil {
 			web.Failure(ctx, http.StatusBadRequest, errors.New("failed to parse json body"))
+			return
 		}
-		// TODO: validar header Authorization (con middleware)
-		err = h.s.LogoutUser(body.Token)
+		err = h.s.LogoutUser(body.RefreshToken)
 		if err != nil {
 			web.Failure(ctx, http.StatusInternalServerError, errors.New("something went wrong"))
+			return
 		}
 		web.Success(ctx, http.StatusOK, nil)
 	}
 }
 
-// RefreshToken recibe un Refresh Token, y devuelve un nuevo JWT.
-// Esto permite al usuario conseguir un Access Token nuevo, cuando vence el previo.
+// RefreshToken recibe un Refresh Token, y devuelve un JWT con un nuevo Access Token y Refresh Token.
 func (h *authHandler) RefreshToken() gin.HandlerFunc {
 	type RequestBody struct {
-		GrantType    string `json:"grantType"`
 		RefreshToken string `json:"refreshToken"`
 	}
+
 	return func(ctx *gin.Context) {
 		var body RequestBody
 		err := ctx.ShouldBindJSON(&body)
 		if err != nil {
 			web.Failure(ctx, http.StatusBadRequest, errors.New("failed to parse json body"))
+			return
 		}
-		// GrantType debe ser refresh_token por el estándar de OAuth.
-		if body.GrantType != "refresh_token" {
-			web.Failure(ctx, http.StatusBadRequest, errors.New("grantType value must be 'refresh_token'"))
-		}
-		// TODO: validar header Authorization (con middleware)
 		jwt, err := h.s.RefreshToken(body.RefreshToken)
 		if err != nil {
 			web.Failure(ctx, http.StatusInternalServerError, errors.New("something went wrong"))
+			return
 		}
 		web.Success(ctx, http.StatusOK, jwt)
 	}

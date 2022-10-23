@@ -76,15 +76,21 @@ func (h *authHandler) Login() gin.HandlerFunc {
 	}
 }
 
-// Logout recibe el Refresh Token a invalidar del usuario en el header 'Authorization'.
+// Logout recibe el Refresh Token a invalidar del usuario en el body.
 // Una vez invalidado el Refresh Token, el usuario no puede obtener nuevos Access Tokens.
 func (h *authHandler) Logout() gin.HandlerFunc {
+	type RequestBody struct {
+		Token string `json:"token"`
+	}
+
 	return func(ctx *gin.Context) {
-		refreshToken := ctx.GetHeader("Authorization")
-		if refreshToken == "" {
-			web.Failure(ctx, http.StatusBadRequest, errors.New("missing Authorization header"))
+		var body RequestBody
+		err := ctx.ShouldBindJSON(&body)
+		if err != nil {
+			web.Failure(ctx, http.StatusBadRequest, errors.New("failed to parse json body"))
 		}
-		err := h.s.LogoutUser(refreshToken)
+		// TODO: validar header Authorization (con middleware)
+		err = h.s.LogoutUser(body.Token)
 		if err != nil {
 			web.Failure(ctx, http.StatusInternalServerError, errors.New("something went wrong"))
 		}
@@ -92,14 +98,25 @@ func (h *authHandler) Logout() gin.HandlerFunc {
 	}
 }
 
-// RefreshToken recibe el Refresh Token en el header 'Authorization', y devuelve un nuevo JWT.
+// RefreshToken recibe un Refresh Token, y devuelve un nuevo JWT.
+// Esto permite al usuario conseguir un Access Token nuevo, cuando vence el previo.
 func (h *authHandler) RefreshToken() gin.HandlerFunc {
+	type RequestBody struct {
+		GrantType    string `json:"grantType"`
+		RefreshToken string `json:"refreshToken"`
+	}
 	return func(ctx *gin.Context) {
-		refreshToken := ctx.GetHeader("Authorization")
-		if refreshToken == "" {
-			web.Failure(ctx, http.StatusBadRequest, errors.New("missing Authorization header"))
+		var body RequestBody
+		err := ctx.ShouldBindJSON(&body)
+		if err != nil {
+			web.Failure(ctx, http.StatusBadRequest, errors.New("failed to parse json body"))
 		}
-		jwt, err := h.s.RefreshToken(refreshToken)
+		// GrantType debe ser refresh_token por el estándar de OAuth.
+		if body.GrantType != "refresh_token" {
+			web.Failure(ctx, http.StatusBadRequest, errors.New("grantType value must be 'refresh_token'"))
+		}
+		// TODO: validar header Authorization (con middleware)
+		jwt, err := h.s.RefreshToken(body.RefreshToken)
 		if err != nil {
 			web.Failure(ctx, http.StatusInternalServerError, errors.New("something went wrong"))
 		}

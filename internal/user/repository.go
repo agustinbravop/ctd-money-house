@@ -8,9 +8,10 @@ import (
 type Repository interface {
 	GetByID(id int) (domain.User, error)
 	GetAll() ([]domain.User, error)
-	// Create(p domain.User) error
+	Create(user domain.User) (int, error)
+	Delete(id int) error
+	ValidateCvuOrAlias(fieldMap map[string]interface{}) bool
 	// Update(id int, p domain.User) error
-	// Delete(id int) error
 	// Exists(id int) bool
 }
 
@@ -65,4 +66,59 @@ func (r *repository) GetAll() ([]domain.User, error) {
 	}
 
 	return users, nil
+}
+
+func (r *repository) Create(u domain.User) (int, error) {
+	stmt, err := r.db.Prepare(queryCreate)
+	if err != nil {
+		return 0, err
+	}
+
+	res, err := stmt.Exec(u.Name, u.LastName, u.Dni, u.Email, u.Telephone, u.Password, u.Cvu, u.Alias)
+	if err != nil {
+		return 0, err
+	}
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return int(id), nil
+}
+
+func (r *repository) Delete(id int) error {
+	stmt, err := r.db.Prepare(queryDeleteById)
+	if err != nil {
+		return err
+	}
+
+	res, err := stmt.Exec(id)
+	if err != nil {
+		return err
+	}
+
+	affect, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if affect < 1 {
+		return ErrNotFound
+	}
+
+	return nil
+}
+
+func (r *repository) ValidateCvuOrAlias(fieldMap map[string]interface{}) bool {
+	var row *sql.Row
+	if fieldMap["cvu"] != nil {
+		row = r.db.QueryRow(queryValidateCvu, fieldMap["cvu"])
+	}
+	if fieldMap["alias"] != nil {
+		row = r.db.QueryRow(queryValidateAlias, fieldMap["alias"])
+	}
+	var id int
+	err := row.Scan(&id)
+	return err == nil
 }

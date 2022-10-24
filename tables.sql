@@ -1,14 +1,21 @@
+DROP SCHEMA IF EXISTS DMH;
+CREATE SCHEMA IF NOT EXISTS DMH;
+USE DMH;
+
+--
+-- Table structure for table `users`
+--
 -- users definition OK
-CREATE TABLE Users
+CREATE TABLE IF NOT EXISTS Users
 (
-    id        BIGINT UNSIGNED auto_increment NOT NULL,
-    name      varchar(150) NOT NULL,
-    last_name varchar(150) NOT NULL,
-    dni       varchar(10)  NOT NULL,
-    email     varchar(150) NOT NULL,
-    telephone varchar(20)  NOT NULL,
-    cvu       int          NOT NULL,
-    alias     varchar(60)  NOT NULL,
+    id          BIGINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    first_name  VARCHAR(150) NOT NULL,
+    last_name   VARCHAR(150) NOT NULL,
+    dni         VARCHAR(10)  NOT NULL,
+    email       VARCHAR(150) NOT NULL,
+    telephone   VARCHAR(20)  NOT NULL,
+    cvu         INT          NOT NULL,
+    alias       VARCHAR(60)  NOT NULL,
     CONSTRAINT id_PK PRIMARY KEY (id)
 ) ENGINE=INNODB
  DEFAULT CHARSET=utf8mb4

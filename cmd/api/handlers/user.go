@@ -9,6 +9,20 @@ import (
 	"strconv"
 )
 
+var (
+	ErrInvalidID  = errors.New("invalid id")
+	ErrBadRequest = errors.New("invalid json body")
+)
+
+type userReq struct {
+	Name      string `json:"name"`
+	LastName  string `json:"last_name"`
+	Dni       string `json:"dni"`
+	Email     string `json:"email"`
+	Telephone string `json:"telephone"`
+	Password  string `json:"password"`
+}
+
 type userHandler struct {
 	s user.Service
 }
@@ -44,5 +58,60 @@ func (h *userHandler) GetAllUsers() gin.HandlerFunc {
 			return
 		}
 		web.Success(c, http.StatusOK, users)
+	}
+}
+
+func (h *userHandler) Create() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		var userReq userReq
+
+		if err := c.ShouldBindJSON(&userReq); err != nil {
+			web.Failure(c, 400, ErrBadRequest)
+			return
+		}
+
+		u := domain.User{
+			Name:      userReq.Name,
+			LastName:  userReq.LastName,
+			Dni:       userReq.Dni,
+			Email:     userReq.Email,
+			Telephone: userReq.Telephone,
+			Password:  userReq.Password,
+		}
+
+		resp, err := h.s.Create(u)
+		if err != nil {
+			switch {
+			case errors.Is(err, user.ErrInternal):
+				web.Failure(c, 500, err)
+				return
+			default:
+				web.Failure(c, 409, err)
+				return
+			}
+		}
+		web.Success(c, 201, resp)
+	}
+}
+
+func (h *userHandler) Delete() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		id, err := strconv.ParseInt(c.Param("id"), 10, 32)
+		if err != nil {
+			web.Failure(c, 400, ErrInvalidID)
+			return
+		}
+		err = h.s.Delete(int(id))
+		if err != nil {
+			switch {
+			case errors.Is(err, user.ErrInternal):
+				web.Failure(c, 500, err)
+				return
+			default:
+				web.Failure(c, 404, err)
+				return
+			}
+		}
+		web.Success(c, 204, "")
 	}
 }

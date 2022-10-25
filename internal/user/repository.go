@@ -5,12 +5,23 @@ import (
 	"database/sql"
 )
 
+var (
+	queryCreate        = "INSERT INTO users (name, last_name, dni, email, telephone, cvu, alias) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+	queryDeleteById    = "DELETE FROM sellers WHERE id=?"
+	queryValidateCvu   = "SELECT id FROM users WHERE cvu=?"
+	queryValidateAlias = "SELECT id FROM users WHERE alias=?"
+)
+
 type Repository interface {
 	GetByID(id int) (domain.User, error)
 	GetAll() ([]domain.User, error)
 	// Create(p domain.User) error
 	Update(p domain.User) error
 	// Delete(id int) error
+	Create(user domain.User) (int, error)
+	Delete(id int) error
+	ValidateCvuOrAlias(fieldMap map[string]interface{}) bool
+	// Update(id int, p domain.User) error
 	// Exists(id int) bool
 }
 
@@ -67,22 +78,61 @@ func (r *repository) GetAll() ([]domain.User, error) {
 	return users, nil
 }
 
+func (r *repository) Create(u domain.User) (int, error) {
+	stmt, err := r.db.Prepare(queryCreate)
+	if err != nil {
+		return 0, err
+	}
+
+	res, err := stmt.Exec(u.Name, u.LastName, u.Dni, u.Email, u.Telephone, u.Cvu, u.Alias)
+	if err != nil {
+		return 0, err
+	}
+
+	id, err := res.LastInsertId()
+	if err != nil {
+		return 0, err
+	}
+
+	return int(id), nil
+}
+
+func (r *repository) Delete(id int) error {
+	stmt, err := r.db.Prepare(queryDeleteById)
+	if err != nil {
+		return err
+	}
+
+	res, err := stmt.Exec(id)
+	if err != nil {
+		return err
+	}
+
+	affect, err := res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	if affect < 1 {
+		return ErrNotFound
+	}
+
+	return nil
+}
+
+func (r *repository) ValidateCvuOrAlias(fieldMap map[string]interface{}) bool {
+	var row *sql.Row
+	if fieldMap["cvu"] != nil {
+		row = r.db.QueryRow(queryValidateCvu, fieldMap["cvu"])
+	}
+	if fieldMap["alias"] != nil {
+		row = r.db.QueryRow(queryValidateAlias, fieldMap["alias"])
+	}
+	var id int
+	err := row.Scan(&id)
+	return err == nil
+}
+
 func (r *repository) Update(u domain.User) error {
-	query := "UPDATE users SET name=?, last_name=?, dni=?, email=?, telephone=?, cvu=?, alias=? WHERE id=?"
-	stmt, err := r.db.Prepare(query)
-	if err != nil {
-		return err
-	}
-
-	res, err := stmt.Exec(u.Name, u.LastName, u.Dni, u.Email, u.Telephone, u.Cvu, u.Alias, u.ID)
-	if err != nil {
-		return err
-	}
-
-	_, err = res.RowsAffected()
-	if err != nil {
-		return err
-	}
-
 	return nil
 }

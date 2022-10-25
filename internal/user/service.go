@@ -2,14 +2,15 @@ package user
 
 import (
 	"ctd-money-house/internal/domain"
+	"ctd-money-house/pkg/utils"
 	"database/sql"
 	"errors"
 )
 
-// Errors
 var (
-	ErrNotFound     = errors.New("user not found")
-	ErrBD           = errors.New("error")
+	ErrInternal    = errors.New("internal server error")
+	ErrGettingUser = errors.New("error getting created user")
+	ErrNotFound    = errors.New("user not found")
 )
 
 type Service interface {
@@ -18,6 +19,9 @@ type Service interface {
 	// Create(user domain.User) (domain.User, error)
 	// Delete(id int) error
 	Update(id int, user domain.User) (domain.User, error)
+	Create(domain.User) (domain.User, error)
+	Delete(id int) error
+	// Update(id int, p domain.User) (domain.User, error)
 }
 
 type service struct {
@@ -50,14 +54,14 @@ func (s *service) Update(id int, u domain.User) (domain.User, error) {
 		if err == sql.ErrNoRows {
 			return domain.User{}, ErrNotFound
 		} else {
-			return domain.User{}, ErrBD
+			return domain.User{}, ErrInternal
 		}
 	}
 
 	newUser := builNewUser(u, user)
 	err = s.r.Update(newUser)
 	if err != nil {
-		return domain.User{}, ErrBD
+		return domain.User{}, ErrInternal
 	}
 
 	return newUser, nil
@@ -79,7 +83,7 @@ func builNewUser(u, user domain.User) domain.User{
 	if u.Telephone != "" {
 		user.Telephone = u.Telephone
 	}
-	if u.Cvu != 0 {
+	if u.Cvu != "" {
 		user.Cvu = u.Cvu
 	}
 	if u.Alias != "" {
@@ -87,4 +91,61 @@ func builNewUser(u, user domain.User) domain.User{
 	}
 
 	return user
+}
+func (s *service) Create(user domain.User) (domain.User, error) {
+	user.Cvu = s.generateCvu()
+	user.Alias = s.generateAlias()
+
+	userID, err := s.r.Create(user)
+	if err != nil {
+		return domain.User{}, ErrInternal
+	}
+
+	userCreated, err := s.r.GetByID(userID)
+	if err != nil {
+		return domain.User{}, ErrGettingUser
+	}
+
+	return userCreated, nil
+}
+
+func (s *service) Delete(id int) error {
+	err := s.r.Delete(id)
+	if err != nil {
+		switch {
+		case errors.Is(err, ErrNotFound):
+			return ErrNotFound
+		default:
+			return ErrInternal
+		}
+	}
+	return nil
+}
+
+func (s *service) generateCvu() string {
+	var cvu string
+	for {
+		cvu = utils.GenerateCvu()
+		var fieldMap = map[string]interface{}{
+			"cvu": cvu,
+		}
+		if s.r.ValidateCvuOrAlias(fieldMap) {
+			break
+		}
+	}
+	return cvu
+}
+
+func (s *service) generateAlias() string {
+	var alias string
+	for {
+		alias = utils.GenerateAlias()
+		var fieldMap = map[string]interface{}{
+			"alias": alias,
+		}
+		if s.r.ValidateCvuOrAlias(fieldMap) {
+			break
+		}
+	}
+	return alias
 }

@@ -1,12 +1,14 @@
 package handlers
 
 import (
+	"ctd-money-house/internal/domain"
 	"ctd-money-house/internal/user"
 	"ctd-money-house/pkg/web"
 	"errors"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 var (
@@ -20,7 +22,6 @@ type userReq struct {
 	Dni       string `json:"dni"`
 	Email     string `json:"email"`
 	Telephone string `json:"telephone"`
-	Password  string `json:"password"`
 }
 
 type userHandler struct {
@@ -76,7 +77,6 @@ func (h *userHandler) Create() gin.HandlerFunc {
 			Dni:       userReq.Dni,
 			Email:     userReq.Email,
 			Telephone: userReq.Telephone,
-			Password:  userReq.Password,
 		}
 
 		resp, err := h.s.Create(u)

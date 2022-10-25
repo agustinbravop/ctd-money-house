@@ -1,6 +1,10 @@
 package user
 
-import "ctd-money-house/internal/domain"
+import (
+	"ctd-money-house/internal/domain"
+	"ctd-money-house/pkg/utils"
+	"errors"
+)
 
 var (
 	ErrInternal    = errors.New("internal server error")
@@ -70,8 +74,8 @@ func (s *service) Delete(id int) error {
 	return nil
 }
 
-func (s *service) generateCvu() int {
-	var cvu int
+func (s *service) generateCvu() string {
+	var cvu string
 	for {
 		cvu = utils.GenerateCvu()
 		var fieldMap = map[string]interface{}{

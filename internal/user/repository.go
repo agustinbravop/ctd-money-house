@@ -5,6 +5,13 @@ import (
 	"database/sql"
 )
 
+var (
+	queryCreate        = "INSERT INTO users (name, last_name, dni, email, telephone, cvu, alias) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+	queryDeleteById    = "DELETE FROM sellers WHERE id=?"
+	queryValidateCvu   = "SELECT id FROM users WHERE cvu=?"
+	queryValidateAlias = "SELECT id FROM users WHERE alias=?"
+)
+
 type Repository interface {
 	GetByID(id int) (domain.User, error)
 	GetAll() ([]domain.User, error)
@@ -74,7 +81,7 @@ func (r *repository) Create(u domain.User) (int, error) {
 		return 0, err
 	}
 
-	res, err := stmt.Exec(u.Name, u.LastName, u.Dni, u.Email, u.Telephone, u.Password, u.Cvu, u.Alias)
+	res, err := stmt.Exec(u.Name, u.LastName, u.Dni, u.Email, u.Telephone, u.Cvu, u.Alias)
 	if err != nil {
 		return 0, err
 	}

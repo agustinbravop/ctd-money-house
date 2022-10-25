@@ -13,20 +13,16 @@ import (
 
 func main() {
 	// _ = godotenv.Load()
-	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/dh_money")
+	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/dmh")
 	if err != nil {
 		log.Fatal(err)
 	}
 	r := gin.Default()
-	// dataSource := "root:root@tcp(localhost:3306)/clinic_test"
 
 	keycloackClient, _ := auth.NewKeycloakClient("", "", "", "")
 
 	router := routes.NewRouter(r, db, keycloackClient)
 	router.MapRoutes()
-	if err := r.Run(); err != nil {
-		panic(err)
-	}
 
 	r.GET("/ping", func(c *gin.Context) { c.String(200, "pong") })
 	if err := r.Run(":8080"); err != nil {

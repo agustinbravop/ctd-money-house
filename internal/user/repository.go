@@ -7,6 +7,7 @@ import (
 
 var (
 	queryCreate        = "INSERT INTO users (name, last_name, dni, email, telephone, cvu, alias) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
+	queryUpdate        = "UPDATE users SET name=?, last_name=?, dni=?, email=?, telephone=?, cvu=?, alias=? WHERE id=?"
 	queryDeleteById    = "DELETE FROM sellers WHERE id=?"
 	queryValidateCvu   = "SELECT id FROM users WHERE cvu=?"
 	queryValidateAlias = "SELECT id FROM users WHERE alias=?"
@@ -15,13 +16,10 @@ var (
 type Repository interface {
 	GetByID(id int) (domain.User, error)
 	GetAll() ([]domain.User, error)
-	// Create(p domain.User) error
 	Update(p domain.User) error
-	// Delete(id int) error
 	Create(user domain.User) (int, error)
 	Delete(id int) error
 	ValidateCvuOrAlias(fieldMap map[string]interface{}) bool
-	// Update(id int, p domain.User) error
 	// Exists(id int) bool
 }
 
@@ -134,5 +132,20 @@ func (r *repository) ValidateCvuOrAlias(fieldMap map[string]interface{}) bool {
 }
 
 func (r *repository) Update(u domain.User) error {
+	stmt, err := r.db.Prepare(queryUpdate)
+	if err != nil {
+		return err
+	}
+
+	res, err := stmt.Exec(u.Name, u.LastName, u.Dni, u.Email, u.Telephone, u.Cvu, u.Alias, u.ID)
+	if err != nil {
+		return err
+	}
+
+	_, err = res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
 	return nil
 }

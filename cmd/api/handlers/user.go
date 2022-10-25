@@ -64,7 +64,7 @@ func (h *userHandler) GetAllUsers() gin.HandlerFunc {
 
 func (h *userHandler) UpdateUser() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		userRequest := domain.User{}
+		userRequest := userReq{}
 		if err := c.ShouldBind(&userRequest); err != nil {
 			web.Failure(c, 400, errors.New("error should bind"))
 			return
@@ -76,7 +76,9 @@ func (h *userHandler) UpdateUser() gin.HandlerFunc {
 			return
 		}
 
-		userResponse, err := h.s.Update(int(id), userRequest)
+		u := createDomainUser(userRequest)
+
+		userResponse, err := h.s.Update(int(id), u)
 		switch err {
 		case nil:
 			web.Success(c, 200, userResponse)
@@ -102,13 +104,7 @@ func (h *userHandler) Create() gin.HandlerFunc {
 			return
 		}
 
-		u := domain.User{
-			Name:      userReq.Name,
-			LastName:  userReq.LastName,
-			Dni:       userReq.Dni,
-			Email:     userReq.Email,
-			Telephone: userReq.Telephone,
-		}
+		u := createDomainUser(userReq)
 
 		resp, err := h.s.Create(u)
 		if err != nil {
@@ -144,5 +140,15 @@ func (h *userHandler) Delete() gin.HandlerFunc {
 			}
 		}
 		web.Success(c, 204, "")
+	}
+}
+
+func createDomainUser(user userReq) domain.User {
+	return domain.User{
+		Name: user.Name,
+		LastName: user.LastName,
+		Dni: user.Dni,
+		Email: user.Email,
+		Telephone: user.Telephone,
 	}
 }

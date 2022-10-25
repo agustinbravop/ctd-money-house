@@ -16,12 +16,9 @@ var (
 type Service interface {
 	GetByID(id int) (domain.User, error)
 	GetAll() ([]domain.User, error)
-	// Create(user domain.User) (domain.User, error)
-	// Delete(id int) error
 	Update(id int, user domain.User) (domain.User, error)
 	Create(domain.User) (domain.User, error)
 	Delete(id int) error
-	// Update(id int, p domain.User) (domain.User, error)
 }
 
 type service struct {
@@ -67,31 +64,6 @@ func (s *service) Update(id int, u domain.User) (domain.User, error) {
 	return newUser, nil
 }
 
-func builNewUser(u, user domain.User) domain.User{
-	if u.Name != "" {
-		user.Name = u.Name
-	}
-	if u.LastName != "" {
-		user.LastName = u.LastName
-	}
-	if u.Dni != "" {
-		user.Dni = u.Dni
-	}
-	if u.Email != "" {
-		user.Email = u.Email
-	}
-	if u.Telephone != "" {
-		user.Telephone = u.Telephone
-	}
-	if u.Cvu != "" {
-		user.Cvu = u.Cvu
-	}
-	if u.Alias != "" {
-		user.Alias = u.Alias
-	}
-
-	return user
-}
 func (s *service) Create(user domain.User) (domain.User, error) {
 	user.Cvu = s.generateCvu()
 	user.Alias = s.generateAlias()
@@ -148,4 +120,23 @@ func (s *service) generateAlias() string {
 		}
 	}
 	return alias
+}
+
+func builNewUser(u, user domain.User) domain.User{
+	if u.Name != "" {
+		user.Name = u.Name
+	}
+	if u.LastName != "" {
+		user.LastName = u.LastName
+	}
+	if u.Dni != "" {
+		user.Dni = u.Dni
+	}
+	if u.Email != "" {
+		user.Email = u.Email
+	}
+	if u.Telephone != "" {
+		user.Telephone = u.Telephone
+	}
+	return user
 }

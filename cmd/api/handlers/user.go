@@ -1,12 +1,14 @@
 package handlers
 
 import (
+	"ctd-money-house/internal/domain"
 	"ctd-money-house/internal/user"
 	"ctd-money-house/pkg/web"
 	"errors"
-	"github.com/gin-gonic/gin"
 	"net/http"
 	"strconv"
+
+	"github.com/gin-gonic/gin"
 )
 
 type userHandler struct {
@@ -44,5 +46,37 @@ func (h *userHandler) GetAllUsers() gin.HandlerFunc {
 			return
 		}
 		web.Success(c, http.StatusOK, users)
+	}
+}
+
+func (h *userHandler) UpdateUser() gin.HandlerFunc {
+	return func(c *gin.Context) {
+		userRequest := domain.User{}
+		if err := c.ShouldBind(&userRequest); err != nil {
+			web.Failure(c, 400, errors.New("error should bind"))
+			return
+		}
+
+		id, err := strconv.ParseInt(c.Param("id"), 10, 64)
+		if err != nil {
+			web.Failure(c, 400, errors.New("invalid id"))
+			return
+		}
+
+		userResponse, err := h.s.Update(int(id), userRequest)
+		switch err {
+		case nil:
+			web.Success(c, 200, userResponse)
+			return
+		case user.ErrBD:
+			web.Failure(c, 500, err)
+			return
+		case user.ErrNotFound:
+			web.Failure(c, 404, err)
+			return
+		default:
+			web.Failure(c, 404, errors.New("try again later"))
+			return
+		}
 	}
 }

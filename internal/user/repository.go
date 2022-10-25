@@ -9,7 +9,7 @@ type Repository interface {
 	GetByID(id int) (domain.User, error)
 	GetAll() ([]domain.User, error)
 	// Create(p domain.User) error
-	// Update(id int, p domain.User) error
+	Update(p domain.User) error
 	// Delete(id int) error
 	// Exists(id int) bool
 }
@@ -65,4 +65,24 @@ func (r *repository) GetAll() ([]domain.User, error) {
 	}
 
 	return users, nil
+}
+
+func (r *repository) Update(u domain.User) error {
+	query := "UPDATE users SET name=?, last_name=?, dni=?, email=?, telephone=?, cvu=?, alias=? WHERE id=?"
+	stmt, err := r.db.Prepare(query)
+	if err != nil {
+		return err
+	}
+
+	res, err := stmt.Exec(u.Name, u.LastName, u.Dni, u.Email, u.Telephone, u.Cvu, u.Alias, u.ID)
+	if err != nil {
+		return err
+	}
+
+	_, err = res.RowsAffected()
+	if err != nil {
+		return err
+	}
+
+	return nil
 }

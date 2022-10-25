@@ -1,5 +1,36 @@
 package main
 
+import (
+	"ctd-money-house/cmd/api/routes"
+	"ctd-money-house/internal/auth"
+	"database/sql"
+	"log"
+
+	_ "github.com/go-sql-driver/mysql"
+
+	"github.com/gin-gonic/gin"
+)
+
 func main() {
+	// _ = godotenv.Load()
+	db, err := sql.Open("mysql", "root:root@tcp(localhost:3306)/dh_money")
+	if err != nil {
+		log.Fatal(err)
+	}
+	r := gin.Default()
+	// dataSource := "root:root@tcp(localhost:3306)/clinic_test"
+
+	keycloackClient, _ := auth.NewKeycloakClient("", "", "", "")
+
+	router := routes.NewRouter(r, db, keycloackClient)
+	router.MapRoutes()
+	if err := r.Run(); err != nil {
+		panic(err)
+	}
+
+	r.GET("/ping", func(c *gin.Context) { c.String(200, "pong") })
+	if err := r.Run(":8080"); err != nil {
+		log.Fatal(err)
+	}
 
 }

@@ -8,6 +8,6 @@ type User struct {
 	Dni       string
 	Email     string
 	Telephone string
-	Cvu       int
+	Cvu       string
 	Alias     string
 }

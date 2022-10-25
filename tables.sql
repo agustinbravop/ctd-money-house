@@ -14,7 +14,7 @@ CREATE TABLE IF NOT EXISTS Users
     dni         VARCHAR(10)  NOT NULL,
     email       VARCHAR(150) NOT NULL,
     telephone   VARCHAR(20)  NOT NULL,
-    cvu         INT          NOT NULL,
+    cvu         VARCHAR(22)  NOT NULL,
     alias       VARCHAR(60)  NOT NULL,
     CONSTRAINT id_PK PRIMARY KEY (id)
 ) ENGINE=INNODB

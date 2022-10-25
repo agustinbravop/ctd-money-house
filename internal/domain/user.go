@@ -8,6 +8,6 @@ type User struct {
 	Dni       string `json:"dni"`
 	Email     string `json:"email"`
 	Telephone string `json:"telephone"`
-	Cvu       int    `json:"cvu"`
+	Cvu       string `json:"cvu"`
 	Alias     string `json:"alias"`
 }

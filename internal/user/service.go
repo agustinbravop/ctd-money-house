@@ -45,8 +45,8 @@ func (s *service) GetAll() ([]domain.User, error) {
 }
 
 func (s *service) Create(user domain.User) (domain.User, error) {
-	user.Cvu = s.generateCvu()
-	user.Alias = s.generateAlias()
+	user.Cvu = utils.GenerateCvu()
+	user.Alias = utils.GenerateAlias()
 
 	userID, err := s.r.Create(user)
 	if err != nil {
@@ -74,30 +74,30 @@ func (s *service) Delete(id int) error {
 	return nil
 }
 
-func (s *service) generateCvu() string {
-	var cvu string
-	for {
-		cvu = utils.GenerateCvu()
-		var fieldMap = map[string]interface{}{
-			"cvu": cvu,
-		}
-		if s.r.ValidateCvuOrAlias(fieldMap) {
-			break
-		}
-	}
-	return cvu
-}
+// func (s *service) generateCvu() string {
+// 	var cvu string
+// 	for {
+// 		cvu = utils.GenerateCvu()
+// 		var fieldMap = map[string]interface{}{
+// 			"cvu": cvu,
+// 		}
+// 		if s.r.ValidateCvuOrAlias(fieldMap) {
+// 			break
+// 		}
+// 	}
+// 	return cvu
+// }
 
-func (s *service) generateAlias() string {
-	var alias string
-	for {
-		alias = utils.GenerateAlias()
-		var fieldMap = map[string]interface{}{
-			"alias": alias,
-		}
-		if s.r.ValidateCvuOrAlias(fieldMap) {
-			break
-		}
-	}
-	return alias
-}
+// func (s *service) generateAlias() string {
+// 	var alias string
+// 	for {
+// 		alias = utils.GenerateAlias()
+// 		var fieldMap = map[string]interface{}{
+// 			"alias": alias,
+// 		}
+// 		if s.r.ValidateCvuOrAlias(fieldMap) {
+// 			break
+// 		}
+// 	}
+// 	return alias
+// }

@@ -47,6 +47,7 @@ func (r *router) buildUserRoutes() {
 	{
 		users.GET("/:id", middleware.TokenValidation(), handler.GetUserByID())
 		users.GET("/", middleware.TokenValidation(), handler.GetAllUsers())
+		users.PATCH("/:id", middleware.TokenValidation(), handler.UpdateUser())
 		users.POST("/", middleware.TokenValidation(), handler.Create())
 		users.DELETE("/:id", middleware.TokenValidation(), handler.Delete())
 	}

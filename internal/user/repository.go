@@ -6,9 +6,9 @@ import (
 )
 
 var (
-	queryCreate        = "INSERT INTO users (name, last_name, dni, email, telephone, cvu, alias) VALUES (?, ?, ?, ?, ?, ?, ?, ?)"
-	queryUpdate        = "UPDATE users SET name=?, last_name=?, dni=?, email=?, telephone=?, cvu=?, alias=? WHERE id=?"
-	queryDeleteById    = "DELETE FROM sellers WHERE id=?"
+	queryUpdate        = "UPDATE users SET first_name=?, last_name=?, dni=?, email=?, telephone=?, cvu=?, alias=? WHERE id=?"
+	queryCreate        = "INSERT INTO users (first_name, last_name, dni, email, telephone, cvu, alias) VALUES (?, ?, ?, ?, ?, ?, ?)"
+	queryDeleteById    = "DELETE FROM users WHERE id=?"
 	queryValidateCvu   = "SELECT id FROM users WHERE cvu=?"
 	queryValidateAlias = "SELECT id FROM users WHERE alias=?"
 )
@@ -44,7 +44,7 @@ func (r *repository) GetByID(id int) (domain.User, error) {
 		&user.Email,
 		&user.Telephone,
 		&user.Cvu,
-		&user.Email,
+		&user.Alias,
 	)
 	if err != nil {
 		return domain.User{}, err
@@ -69,7 +69,7 @@ func (r *repository) GetAll() ([]domain.User, error) {
 			&user.Email,
 			&user.Telephone,
 			&user.Cvu,
-			&user.Email)
+			&user.Alias)
 		users = append(users, user)
 	}
 
@@ -126,9 +126,9 @@ func (r *repository) ValidateCvuOrAlias(fieldMap map[string]interface{}) bool {
 	if fieldMap["alias"] != nil {
 		row = r.db.QueryRow(queryValidateAlias, fieldMap["alias"])
 	}
-	var id int
+	var id string
 	err := row.Scan(&id)
-	return err == nil
+	return err != nil
 }
 
 func (r *repository) Update(u domain.User) error {

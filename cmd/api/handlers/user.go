@@ -12,16 +12,27 @@ import (
 )
 
 var (
-	ErrInvalidID  = errors.New("invalid id")
-	ErrBadRequest = errors.New("invalid json body")
+	ErrInvalidID    = errors.New("invalid id")
+	ErrBadRequest   = errors.New("invalid json body")
+	ErrUserNotFound = errors.New("user not found")
 )
 
-type userReq struct {
-	Name      string `json:"name"`
+type UserReq struct {
+	Name      string `json:"first_name"`
 	LastName  string `json:"last_name"`
 	Dni       string `json:"dni"`
 	Email     string `json:"email"`
 	Telephone string `json:"telephone"`
+}
+
+type UserRes struct {
+	Name      string `json:"first_name"`
+	LastName  string `json:"last_name"`
+	Dni       string `json:"dni"`
+	Email     string `json:"email"`
+	Telephone string `json:"telephone"`
+	Cvu       string `json:"cvu"`
+	Alias     string `json:"alias"`
 }
 
 type userHandler struct {
@@ -39,15 +50,26 @@ func (h *userHandler) GetUserByID() gin.HandlerFunc {
 		idParam := c.Param("id")
 		id, err := strconv.Atoi(idParam)
 		if err != nil {
-			web.Failure(c, http.StatusBadRequest, errors.New("invalid id"))
+			web.Failure(c, http.StatusBadRequest, ErrInvalidID)
 			return
 		}
 		user, err := h.s.GetByID(id)
 		if err != nil {
-			web.Failure(c, http.StatusNotFound, errors.New("user not found"))
+			web.Failure(c, http.StatusNotFound, ErrUserNotFound)
 			return
 		}
-		web.Success(c, http.StatusOK, user)
+
+		userResp := UserRes{
+			Name:      user.Name,
+			LastName:  user.LastName,
+			Dni:       user.Dni,
+			Email:     user.Email,
+			Telephone: user.Telephone,
+			Cvu:       user.Cvu,
+			Alias:     user.Alias,
+		}
+
+		web.Success(c, http.StatusOK, userResp)
 	}
 }
 
@@ -97,7 +119,7 @@ func (h *userHandler) UpdateUser() gin.HandlerFunc {
 }
 func (h *userHandler) Create() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		var userReq userReq
+		var userReq UserReq
 
 		if err := c.ShouldBindJSON(&userReq); err != nil {
 			web.Failure(c, 400, ErrBadRequest)
@@ -117,7 +139,18 @@ func (h *userHandler) Create() gin.HandlerFunc {
 				return
 			}
 		}
-		web.Success(c, 201, resp)
+
+		res := UserRes{
+			Name:      resp.Name,
+			LastName:  resp.LastName,
+			Dni:       resp.Dni,
+			Email:     resp.Email,
+			Telephone: resp.Telephone,
+			Alias:     resp.Alias,
+			Cvu:       resp.Cvu,
+		}
+
+		web.Success(c, 201, res)
 	}
 }
 

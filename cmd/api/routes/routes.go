@@ -13,6 +13,7 @@ import (
 
 type Router interface {
 	MapRoutes()
+	Start()
 }
 
 type router struct {
@@ -30,9 +31,17 @@ func NewRouter(r *gin.Engine, db *sql.DB, kcClient auth.KeycloakClient) Router {
 	}
 }
 
+func (r *router) Start() {
+	err := r.r.Run(":8082")
+	if err != nil {
+		panic(err)
+	}
+}
+
 func (r *router) MapRoutes() {
 	r.setGroup()
 	r.buildUserRoutes()
+	r.buildAuthRoutes()
 }
 
 func (r *router) setGroup() {
@@ -54,11 +63,16 @@ func (r *router) buildUserRoutes() {
 }
 
 func (r *router) buildAuthRoutes() {
-	service := auth.NewAuthService(r.kcClient)
+	repo := user.NewRepository(r.db)
+	userService := user.NewService(repo)
+	service := auth.NewAuthService(r.kcClient, userService)
 	handler := handlers.NewAuthHandler(service)
 
 	auths := r.rg.Group("/auth")
 	{
 		auths.POST("/login", handler.Login())
+		auths.POST("/logout", handler.Logout())
+		auths.POST("/token", handler.RefreshToken())
+		auths.POST("/register", handler.Register())
 	}
 }

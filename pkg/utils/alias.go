@@ -11,19 +11,19 @@ import (
 )
 
 func GenerateAlias() string {
-	file, err := os.Open("../../pkg/utils/aliases.txt")
+	file, err := os.Open("./pkg/utils/aliases.txt")
 	if err != nil {
 		log.Fatal(err)
 	}
 	scanner := bufio.NewScanner(file)
-	words := []string{}
+	var words []string
 
 	for scanner.Scan() {
 		line := scanner.Text()
 		words = append(words, line)
 	}
 
-	selectedWords := []string{}
+	var selectedWords []string
 	rand.Seed(time.Now().UnixNano())
 
 	for i := 0; i < 3; i++ {
@@ -49,6 +49,6 @@ func GenerateCvu() string {
 	secNum := rand.Intn(secMax-secMin) + secMin
 
 	// concatenates the given numbers
-	cvu := string(fmt.Sprint(firstNum) + fmt.Sprint(secNum))
+	cvu := fmt.Sprint(firstNum) + fmt.Sprint(secNum)
 	return cvu
 }

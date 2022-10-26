@@ -3,7 +3,6 @@ package auth
 import (
 	"context"
 	"ctd-money-house/internal/domain"
-	"fmt"
 	"github.com/Nerzal/gocloak/v12"
 	"time"
 )
@@ -91,7 +90,6 @@ func (k *keycloakClient) loginClient() error {
 	if err != nil {
 		return err
 	}
-	fmt.Printf("%+#v", token)
 	k.jwt = token
 	k.tokenExpiresAt = time.Now().Unix() + int64(token.ExpiresIn)
 	return nil

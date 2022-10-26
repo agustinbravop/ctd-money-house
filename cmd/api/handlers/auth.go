@@ -73,7 +73,6 @@ func (h *authHandler) Login() gin.HandlerFunc {
 		if err != nil {
 			// TODO: con (err != nil) no se puede diferenciar cual fue el error.
 			// TODO: sería mejor si pudieramos dar un mensaje de error más personalizado.
-			println(err.Error())
 			web.Failure(ctx, http.StatusBadRequest, errors.New("wrong password or email"))
 			return
 		}

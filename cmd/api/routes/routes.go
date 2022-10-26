@@ -63,7 +63,9 @@ func (r *router) buildUserRoutes() {
 }
 
 func (r *router) buildAuthRoutes() {
-	service := auth.NewAuthService(r.kcClient)
+	repo := user.NewRepository(r.db)
+	userService := user.NewService(repo)
+	service := auth.NewAuthService(r.kcClient, userService)
 	handler := handlers.NewAuthHandler(service)
 
 	auths := r.rg.Group("/auth")

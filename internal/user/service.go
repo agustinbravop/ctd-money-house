@@ -122,7 +122,7 @@ func (s *service) generateAlias() string {
 	return alias
 }
 
-func builNewUser(u, user domain.User) domain.User{
+func builNewUser(u, user domain.User) domain.User {
 	if u.Name != "" {
 		user.Name = u.Name
 	}

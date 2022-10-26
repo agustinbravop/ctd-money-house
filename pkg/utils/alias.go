@@ -11,7 +11,7 @@ import (
 )
 
 func GenerateAlias() string {
-	file, err := os.Open("./aliases.txt")
+	file, err := os.Open("../../pkg/utils/aliases.txt")
 	if err != nil {
 		log.Fatal(err)
 	}

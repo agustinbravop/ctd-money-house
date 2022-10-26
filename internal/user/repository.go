@@ -125,7 +125,7 @@ func (r *repository) ValidateCvuOrAlias(fieldMap map[string]interface{}) bool {
 	if fieldMap["alias"] != nil {
 		row = r.db.QueryRow(queryValidateAlias, fieldMap["alias"])
 	}
-	var id int
+	var id string
 	err := row.Scan(&id)
-	return err == nil
+	return err != nil
 }

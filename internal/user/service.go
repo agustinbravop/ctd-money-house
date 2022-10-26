@@ -45,8 +45,8 @@ func (s *service) GetAll() ([]domain.User, error) {
 }
 
 func (s *service) Create(user domain.User) (domain.User, error) {
-	user.Cvu = utils.GenerateCvu()
-	user.Alias = utils.GenerateAlias()
+	user.Cvu = s.generateCvu()
+	user.Alias = s.generateAlias()
 
 	userID, err := s.r.Create(user)
 	if err != nil {

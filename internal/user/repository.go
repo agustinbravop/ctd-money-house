@@ -35,7 +35,7 @@ func NewRepository(db *sql.DB) Repository {
 
 func (r *repository) GetByID(id int) (domain.User, error) {
 	var user domain.User
-	row := r.db.QueryRow("SELECT * FROM users WHERE id = ?", id)
+	row := r.db.QueryRow("SELECT id, first_name, last_name, dni, email, telephone, cvu, alias FROM users WHERE id = ?", id)
 	err := row.Scan(
 		&user.ID,
 		&user.Name,
@@ -54,7 +54,7 @@ func (r *repository) GetByID(id int) (domain.User, error) {
 
 func (r *repository) GetAll() ([]domain.User, error) {
 	var users []domain.User
-	rows, err := r.db.Query("SELECT * FROM users")
+	rows, err := r.db.Query("SELECT id, first_name, last_name, dni, email, telephone, cvu, alias FROM users")
 	if err != nil {
 		return nil, err
 	}

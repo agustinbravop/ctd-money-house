@@ -7,6 +7,7 @@ import (
 	"ctd-money-house/cmd/api/handlers"
 	"ctd-money-house/cmd/api/middleware"
 	"ctd-money-house/internal/user"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -55,6 +56,9 @@ func (r *router) buildUserRoutes() {
 	{
 		users.GET("/:id", middleware.TokenValidation(), handler.GetUserByID())
 		users.GET("/", middleware.TokenValidation(), handler.GetAllUsers())
+		users.PATCH("/:id", middleware.TokenValidation(), handler.UpdateUser())
+		users.POST("/", middleware.TokenValidation(), handler.Create())
+		users.DELETE("/:id", middleware.TokenValidation(), handler.Delete())
 	}
 }
 

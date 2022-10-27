@@ -46,9 +46,10 @@ func main() {
 	r := gin.Default()
 	router := routes.NewRouter(r, db, keycloakClient)
 	router.MapRoutes()
-
 	r.GET("/ping", func(c *gin.Context) { c.String(200, "pong") })
-	if err := r.Run(":8082"); err != nil {
+
+	port := os.Getenv("PORT")
+	if err := r.Run(fmt.Sprintf(":%v", port)); err != nil {
 		log.Fatal(err)
 	}
 }

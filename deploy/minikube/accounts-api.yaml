@@ -1,0 +1,53 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: accounts-api-deployment
+  labels:
+    app: accounts-api
+spec:
+  selector:
+    matchLabels:
+      app: accounts-api
+  template:
+    metadata:
+      labels:
+        app: accounts-api
+    spec:
+      containers:
+      - name: accounts-api
+        image: ctdteam5/accounts-api
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: PORT
+          value: "80"
+        - name: USERS_API_HOST
+          value: "http://$(USERS_API_SERVICE_SERVICE_HOST):$(USERS_API_SERVICE_SERVICE_PORT)"
+        - name: BANK_API_HOST
+          value: "http://$(BANK_API_SERVICE_SERVICE_HOST):$(BANK_API_SERVICE_SERVICE_PORT)"
+        - name: DB_HOST
+          value: accounts-db-service
+        - name: DB_DATABASE
+          value: "ACCOUNTSDB"
+        - name: DB_USERNAME
+          value: "root"
+        - name: DB_PASSWORD
+          value: "root"
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: accounts-api-service
+spec:
+  type: ClusterIP
+  selector:
+    app: accounts-api
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80

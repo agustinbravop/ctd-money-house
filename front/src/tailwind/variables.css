@@ -1,0 +1,30 @@
+:root {
+    --primary: #3399FF;
+
+    --secondary: #f2fafd;
+    --background: #0A192A;
+
+    --error: #e31837;
+    --success: #1aac06;
+
+    --white: #ffffff;
+
+    --neutral-gray-100: #E7EBF0;
+    --neutral-gray-300: #7E8792;
+    --neutral-gray-500: #0D2238;
+    --neutral-blue-100: #c2e0ff14;
+
+    --8xl: 5.375rem;
+    --7xl: 4.5rem;
+    --6xl: 4.25rem;
+    --4xl: 3.5rem;
+    --h2xl: 3.375rem;
+    --3xl: 2.625rem;
+    --subtext: 2.25rem;
+    --2xl: 2rem;
+    --xl: 1.5rem;
+    --lg: 1.125rem;
+    --base: 1rem;
+    --sm: 0.875rem;
+    --xs: 0.75rem;
+}

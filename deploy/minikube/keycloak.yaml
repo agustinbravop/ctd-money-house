@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: keycloak-deployment
+  labels:
+    app: keycloak
+spec:
+  selector:
+    matchLabels:
+      app: keycloak
+  template:
+    metadata:
+      labels:
+        app: keycloak
+    spec:
+      containers:
+      - name: keycloak
+        image: ctdteam5/keycloak:latest
+        ports:
+        - name: "http"
+          containerPort: 8080
+        - name: "https"
+          containerPort: 8443
+        env:
+        - name: DB_VENDOR
+          value: postgres
+        - name: DB_ADDR
+          value: keycloak-db-service
+        - name: DB_USER
+          value: keycloak
+        - name: DB_PASSWORD
+          value: password
+        - name: USERS_CLIENT_SECRET
+          value: "aBC5irvTeiVOhF4nNBRN2ZZ0JLh35N8L"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: keycloak-service
+spec:
+  type: ClusterIP
+  selector:
+    app: keycloak
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 8080

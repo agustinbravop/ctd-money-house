@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bank-api-deployment
+  labels:
+    app: bank-api
+spec:
+  selector:
+    matchLabels:
+      app: bank-api
+  template:
+    metadata:
+      labels:
+        app: bank-api
+    spec:
+      containers:
+      - name: bank-api
+        image: ctdteam5/bank-api
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: PORT
+          value: "80"
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bank-api-service
+spec:
+  type: ClusterIP
+  selector:
+    app: bank-api
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80

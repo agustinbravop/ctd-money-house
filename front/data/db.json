@@ -1,0 +1,488 @@
+{
+  "users": [
+    {
+      "email": "maub@gmail.com",
+      "password": "$2a$10$p00z.4hbstv6MadwBACsluBO24qtvhaFsBcIftK6FrPdpR/ZeF5Ue",
+      "firstName": "Mauricio",
+      "lastName": "Brito",
+      "phone": "1178978927",
+      "dni": "90324324",
+      "id": "mkJf2Lz"
+    },
+    {
+      "email": "maubrito@gmail.com",
+      "password": "$2a$10$xLHzvO5eZo9pqw62piadAu3Y8JQWaJtY7.w66GqI9U16d6euGcUhK",
+      "firstName": "Aitana",
+      "lastName": "Torres",
+      "phone": "1178978927",
+      "dni": "90636666",
+      "id": "s0ElmHR"
+    },
+    {
+      "email": "maub2@gmail.com",
+      "password": "$2a$10$v.L5eU84RA4orxmd492XoOs3P9BTAVn/.s0qhUXZzKS17D3BeVn4q",
+      "firstName": "Mauricio",
+      "lastName": "Brito",
+      "phone": "1121321327",
+      "dni": 23434454,
+      "id": "wQXxAAj"
+    },
+    {
+      "email": "maub3@gmail.com",
+      "password": "$2a$10$Ty3z7Fes0f1abDiyEyocuuhE5dslSDhlnZp8kkTzmgTBW0CGg9BW2",
+      "firstName": "Mauricio",
+      "lastName": "Brito",
+      "phone": "1179979928",
+      "dni": 12312321,
+      "id": "g0Ks-GR"
+    }
+  ],
+  "accounts": [
+    {
+      "id": "1",
+      "userId": "mkJf2Lz",
+      "balance": 43000,
+      "cvu": "1234567890123456",
+      "alias": "mi.alias.n",
+      "name": "Mauricio Brito"
+    },
+    {
+      "alias": "Pay.House.Cartera",
+      "cvu": "1234567890123777",
+      "balance": 0,
+      "userId": "s0ElmHR",
+      "id": "TLRHPCv",
+      "name": "Aitana Torres"
+    },
+    {
+      "alias": "Money.House.House",
+      "cvu": "4492350379455671312506",
+      "balance": 0,
+      "name": "Mauricio Brito",
+      "userId": "wQXxAAj",
+      "id": "XSRaNwU"
+    },
+    {
+      "alias": "Digital.Bank.House",
+      "cvu": "7563215523626309152249",
+      "balance": 0,
+      "name": "Mauricio Brito",
+      "userId": "g0Ks-GR",
+      "id": "amcfpE5"
+    }
+  ],
+  "activities": [
+    {
+      "id": "1",
+      "name": "Aitana",
+      "amount": 3500.64,
+      "dated": "2022-09-17T20:57:38+00:00",
+      "userId": "mkJf2Lz",
+      "origin": "1234567890123777",
+      "destination": "1234567890123456",
+      "type": "Transfer"
+    },
+    {
+      "id": "2",
+      "name": "Brendys",
+      "amount": -1895,
+      "dated": "2022-09-17T20:57:38+00:00",
+      "userId": "mkJf2Lz",
+      "origin": "1234567890123999",
+      "destination": "1234567890123456",
+      "type": "Transfer"
+    },
+    {
+      "id": "3",
+      "name": "Brendys",
+      "amount": -1895,
+      "dated": "2022-09-17T20:57:38+00:00",
+      "userId": "mkJf2Lz",
+      "origin": "1234567890123999",
+      "destination": "1234567890123456",
+      "type": "Transfer"
+    },
+    {
+      "id": "4",
+      "name": "Brendys",
+      "amount": -1895,
+      "dated": "2022-09-17T20:57:38+00:00",
+      "userId": "mkJf2Lz",
+      "origin": "1234567890123999",
+      "destination": "1234567890123456",
+      "type": "Transfer"
+    },
+    {
+      "id": "5",
+      "name": "Brendys",
+      "amount": -1895,
+      "dated": "2022-09-17T20:57:38+00:00",
+      "userId": "mkJf2Lz",
+      "origin": "1234567890123999",
+      "destination": "1234567890123456",
+      "type": "Transfer"
+    },
+    {
+      "id": "6",
+      "name": "Brendys",
+      "amount": -1895,
+      "dated": "2022-09-17T20:57:38+00:00",
+      "userId": "mkJf2Lz",
+      "origin": "1234567890123999",
+      "destination": "1234567890123456",
+      "type": "Transfer"
+    },
+    {
+      "id": "7",
+      "name": "Brendys",
+      "amount": -1895,
+      "dated": "2022-09-17T20:57:38+00:00",
+      "userId": "mkJf2Lz",
+      "origin": "1234567890123999",
+      "destination": "1234567890123456",
+      "type": "Transfer"
+    },
+    {
+      "id": "8",
+      "name": "Brendys",
+      "amount": -1895,
+      "dated": "2022-09-17T20:57:38+00:00",
+      "userId": "mkJf2Lz",
+      "origin": "1234567890123999",
+      "destination": "1234567890123456",
+      "type": "Transfer"
+    },
+    {
+      "id": "9",
+      "name": "Brendys",
+      "amount": -1895,
+      "dated": "2022-09-17T20:57:38+00:00",
+      "userId": "mkJf2Lz",
+      "origin": "1234567890123999",
+      "destination": "1234567890123456",
+      "type": "Transfer"
+    },
+    {
+      "id": "10",
+      "name": "Brendys",
+      "amount": -1895,
+      "dated": "2022-09-17T20:57:38+00:00",
+      "userId": "mkJf2Lz",
+      "origin": "1234567890123999",
+      "destination": "1234567890123456",
+      "type": "Transfer"
+    },
+    {
+      "amount": "3000",
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T12:55:30.612Z",
+      "userId": "mkJf2Lz",
+      "id": "K2dpKhp"
+    },
+    {
+      "amount": "4000",
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T13:30:34.779Z",
+      "userId": "mkJf2Lz",
+      "id": "mxl6CK3"
+    },
+    {
+      "amount": "5000",
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T13:32:12.141Z",
+      "userId": "mkJf2Lz",
+      "id": "rz2bWw7"
+    },
+    {
+      "amount": "3000",
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T14:05:39.373Z",
+      "userId": "mkJf2Lz",
+      "id": "bH11ZSn"
+    },
+    {
+      "amount": "3000",
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T14:07:31.349Z",
+      "userId": "mkJf2Lz",
+      "id": "J5BH0ud"
+    },
+    {
+      "amount": "3000",
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T14:08:42.149Z",
+      "userId": "mkJf2Lz",
+      "id": "mQV06yG"
+    },
+    {
+      "amount": "2000",
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T14:10:15.283Z",
+      "userId": "mkJf2Lz",
+      "id": "iFMBHKO"
+    },
+    {
+      "amount": 3000,
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T14:11:47.530Z",
+      "userId": "mkJf2Lz",
+      "id": "p8W8vea"
+    },
+    {
+      "amount": 100,
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T14:13:28.489Z",
+      "userId": "mkJf2Lz",
+      "id": "VT1tysS"
+    },
+    {
+      "amount": 31000,
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T18:45:55.304Z",
+      "userId": "mkJf2Lz",
+      "id": "YFqtPT3"
+    },
+    {
+      "amount": 3000,
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T19:10:51.299Z",
+      "userId": "mkJf2Lz",
+      "id": "Rk74x1_"
+    },
+    {
+      "amount": 25000,
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T19:15:54.290Z",
+      "userId": "mkJf2Lz",
+      "id": "NMqhIEL"
+    },
+    {
+      "amount": 500,
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T19:16:14.787Z",
+      "userId": "mkJf2Lz",
+      "id": "BqD4mgW"
+    },
+    {
+      "amount": 100,
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T19:16:40.316Z",
+      "userId": "mkJf2Lz",
+      "id": "4buK5MU"
+    },
+    {
+      "amount": 2100,
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T19:21:14.029Z",
+      "userId": "mkJf2Lz",
+      "id": "KCZzpdq"
+    },
+    {
+      "amount": 100,
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T19:22:38.855Z",
+      "userId": "mkJf2Lz",
+      "id": "QB760VB"
+    },
+    {
+      "amount": 2000,
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T21:22:52.255Z",
+      "userId": "mkJf2Lz",
+      "id": "BofCXF4"
+    },
+    {
+      "amount": 2000,
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T21:51:14.548Z",
+      "userId": "mkJf2Lz",
+      "id": "DFi7Vn5"
+    },
+    {
+      "amount": 2000,
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T21:51:37.015Z",
+      "userId": "s0ElmHR",
+      "id": "a4qj7nu"
+    },
+    {
+      "amount": 2000,
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T22:02:03.844Z",
+      "userId": "mkJf2Lz",
+      "id": "muZp3Um"
+    },
+    {
+      "amount": 1000,
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T22:02:14.535Z",
+      "userId": "mkJf2Lz",
+      "id": "_Km3ypc"
+    },
+    {
+      "amount": 350,
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T22:13:47.615Z",
+      "userId": "mkJf2Lz",
+      "id": "Njivl2c"
+    },
+    {
+      "amount": 200,
+      "type": "Deposit",
+      "description": "Depósito con tarjeta",
+      "dated": "2022-10-18T22:14:29.035Z",
+      "userId": "mkJf2Lz",
+      "id": "CGQ87EH"
+    },
+    {
+      "type": "Transfer",
+      "amount": -2000,
+      "origin": "1234567890123456",
+      "destination": "1234567890123777",
+      "name": "Mauricio",
+      "dated": "2022-10-19T05:00:26.177Z",
+      "userId": "mkJf2Lz",
+      "id": "KW-OI6X"
+    },
+    {
+      "type": "Transfer",
+      "amount": -2000,
+      "origin": "1234567890123456",
+      "destination": "1234567890123777",
+      "name": "Mauricio",
+      "dated": "2022-10-19T05:01:52.852Z",
+      "userId": "mkJf2Lz",
+      "id": "5e8tzIT"
+    },
+    {
+      "type": "Transfer",
+      "amount": -2000,
+      "origin": "1234567890123456",
+      "destination": "1234567890123777",
+      "name": "Mauricio",
+      "dated": "2022-10-19T05:02:38.583Z",
+      "userId": "mkJf2Lz",
+      "id": "_ZFD-ha"
+    },
+    {
+      "type": "Transfer",
+      "amount": -2000,
+      "origin": "1234567890123456",
+      "destination": "1234567890123777",
+      "name": "Mauricio",
+      "dated": "2022-10-19T05:03:38.092Z",
+      "userId": "mkJf2Lz",
+      "id": "top8R7V"
+    },
+    {
+      "type": "Transfer",
+      "amount": -50000,
+      "origin": "1234567890123456",
+      "destination": "1234567890123777",
+      "name": "Mauricio",
+      "dated": "2022-10-19T05:03:53.019Z",
+      "userId": "mkJf2Lz",
+      "id": "q3UItfQ"
+    },
+    {
+      "type": "Transfer",
+      "amount": -3000,
+      "origin": "1234567890123456",
+      "destination": "1234567890123777",
+      "name": "Aitana Torres",
+      "dated": "2022-10-19T16:45:16.871Z",
+      "userId": "mkJf2Lz",
+      "id": "WoGOxBO"
+    },
+    {
+      "type": "Transfer",
+      "amount": -3000,
+      "origin": "1234567890123456",
+      "destination": "1234567890123777",
+      "name": "Aitana Torres",
+      "dated": "2022-10-19T16:45:20.299Z",
+      "userId": "mkJf2Lz",
+      "id": "evPdaTw"
+    },
+    {
+      "type": "Transfer",
+      "amount": -3000,
+      "origin": "1234567890123456",
+      "destination": "1234567890123777",
+      "name": "Aitana Torres",
+      "dated": "2022-10-19T16:45:30.980Z",
+      "userId": "mkJf2Lz",
+      "id": "015pH67"
+    },
+    {
+      "type": "Transfer",
+      "amount": -2000,
+      "origin": "1234567890123456",
+      "destination": "1234567890123777",
+      "name": "Aitana Torres",
+      "dated": "2022-10-19T16:46:29.362Z",
+      "userId": "mkJf2Lz",
+      "id": "UVJhrmV"
+    },
+    {
+      "type": "Transfer",
+      "amount": -2000,
+      "origin": "1234567890123456",
+      "destination": "1234567890123777",
+      "name": "Aitana Torres",
+      "dated": "2022-10-19T16:46:43.247Z",
+      "userId": "mkJf2Lz",
+      "id": "Uoq1xLT"
+    },
+    {
+      "type": "Transfer",
+      "amount": -3000,
+      "origin": "1234567890123456",
+      "destination": "1234567890123777",
+      "name": "Aitana Torres",
+      "dated": "2022-10-19T16:53:19.731Z",
+      "userId": "mkJf2Lz",
+      "id": "EjRDHeR"
+    }
+  ],
+  "cards": [
+    {
+      "expiration": "1024",
+      "number": "4111972644444444",
+      "name": "Jesus Rodriguez",
+      "cvc": "222",
+      "userId": "mkJf2Lz",
+      "id": "0SaS7ga"
+    },
+    {
+      "expiration": "1133",
+      "number": "4111912121212121",
+      "name": "Juan Carlos",
+      "cvc": "888",
+      "userId": "mkJf2Lz",
+      "id": "skYBjy8"
+    }
+  ]
+}

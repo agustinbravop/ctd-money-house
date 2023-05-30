@@ -1,0 +1,10 @@
+{
+  "/api/*": "/$1",
+  "/users/:userId/accounts/": "/600/users/:userId/accounts",
+  "/users/:userId/accounts/:accountId": "/600/accounts/:accountId",
+  "/users/:userId/activities": "/600/users/:userId/activities",
+  "/users/:userId/activities?*": "/600/users/:userId/activities",
+  "/users/:userId/activities/:activityId": "/600/activities/:activityId",
+  "/users/:userId/cards/": "/600/users/:userId/cards",
+  "/users/:userId/cards/:cardId": "/600/cards/:cardId"
+}

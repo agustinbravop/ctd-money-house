@@ -1,0 +1,48 @@
+@import './variables.css';
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    body {
+        background: var(--background);
+        color: var(--neutral-gray-100);
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        print-color-adjust: initial;
+    }
+
+    fieldset {
+        border-color: var(--neutral-blue-100) !important;
+    }
+
+    .border-primary-hover:hover {
+        border-color: var(--primary);
+    }
+
+    .MuiFormControl-root,
+    input {
+        background-color: var(--neutral-gray-500);
+        width: 20rem;
+        color: var(--neutral-gray-100) !important;
+    }
+
+    label {
+        color: var(--neutral-gray-100) !important;
+    }
+
+    @media print {
+        body {
+            -webkit-print-color-adjust: exact;
+            -moz-print-color-adjust: exact;
+            -ms-print-color-adjust: exact;
+            print-color-adjust: exact;
+            width: 100%;
+            background: var(--background);
+            color: var(--neutral-gray-100);
+            min-height: 100vh;
+        }
+    }
+}

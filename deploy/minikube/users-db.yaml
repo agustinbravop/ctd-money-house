@@ -1,0 +1,87 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-db-deployment
+spec:
+  selector:
+    matchLabels:
+      app: users-db
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app: users-db
+    spec:
+      containers:
+      - image: mysql
+        name: users-db
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: "root"
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+            - name: users-db-init
+              mountPath: /docker-entrypoint-initdb.d
+            - mountPath: "/var/lib/mysql"
+              subPath: "mysql"
+              name: users-db-disk
+      volumes:
+        - name: users-db-init
+          configMap:
+            name: users-db-init-config
+        - name: users-db-disk
+          persistentVolumeClaim:
+            claimName: users-db-disk
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: users-db-service
+spec:
+  type: ClusterIP
+  selector:
+    app: users-db
+  ports:
+  - port: 3306
+    targetPort: 3306
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: users-db-disk
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: users-db-init-config
+data:
+  init.sql: |
+    DROP DATABASE IF EXISTS USERSDB;
+    CREATE DATABASE IF NOT EXISTS USERSDB;
+    USE USERSDB;
+
+    --
+    -- Table structure for table `users`
+    --
+    -- users definition OK
+    CREATE TABLE IF NOT EXISTS users
+    (
+        id         VARCHAR(36)  NOT NULL,
+        first_name VARCHAR(150) NOT NULL,
+        last_name  VARCHAR(150) NOT NULL,
+        dni        VARCHAR(10)  NOT NULL,
+        email      VARCHAR(150) NOT NULL UNIQUE,
+        telephone  VARCHAR(20)  NOT NULL,
+        CONSTRAINT id_PK PRIMARY KEY (id)
+    ) ENGINE = INNODB
+      DEFAULT CHARSET = utf8mb4
+      COLLATE = utf8mb4_0900_ai_ci
+        COMMENT ='user information';

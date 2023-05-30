@@ -1,0 +1,21 @@
+NAMESPACE=kube-system
+
+helm repo add ingress-nginx https://kubernetes.github.io/ingress-nginx
+helm repo update
+
+helm install ingress-nginx ingress-nginx/ingress-nginx \
+  --create-namespace \
+  --namespace $NAMESPACE \
+  --set controller.service.annotations."service\.beta\.kubernetes\.io/azure-load-balancer-health-probe-request-path"=/healthz \
+  --set controller.nodeSelector."beta\.kubernetes\.io/os"=linux \
+  --set defaultBackend.nodeSelector."beta\.kubernetes\.io/os"=linux
+
+
+---- SOLUCIÓN 1 ----
+
+1. Activar HTTP Routing Add On en AKS (crea un recurso de DNS Zone).
+
+2. Con el siguiente comando obtenemos la URL creada:
+	az aks show --resource-group ctd --name money-house --query addonProfiles.httpApplicationRouting.config.HTTPApplicationRoutingZoneName -o table
+
+3. Colocar la URL creada en el atributo spec.rules.host del archivo ingress.yaml. Se le agrega el subdominio 'wallet.' para que sea específico a la api de Digital Money House.

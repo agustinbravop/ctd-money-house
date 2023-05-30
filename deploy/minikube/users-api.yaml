@@ -1,0 +1,57 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: users-api-deployment
+  labels:
+    app: users-api
+spec:
+  selector:
+    matchLabels:
+      app: users-api
+  template:
+    metadata:
+      labels:
+        app: users-api
+    spec:
+      containers:
+      - name: users-api
+        image: ctdteam5/users-api
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: KEYCLOAK_URL
+          value: "http://$(KEYCLOAK_SERVICE_SERVICE_HOST):$(KEYCLOAK_SERVICE_SERVICE_PORT)/"
+        - name: KEYCLOAK_REALM
+          value: "money-house"
+        - name: KEYCLOAK_CLIENT_ID
+          value: "users-api"
+        - name: KEYCLOAK_CLIENT_SECRET
+          value: "aBC5irvTeiVOhF4nNBRN2ZZ0JLh35N8L"
+        - name: PORT
+          value: "80"
+        - name: DB_HOST
+          value: users-db-service
+        - name: DB_DATABASE
+          value: "USERSDB"
+        - name: DB_USERNAME
+          value: "root"
+        - name: DB_PASSWORD
+          value: "root"
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: users-api-service
+spec:
+  type: ClusterIP
+  selector:
+    app: users-api
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80

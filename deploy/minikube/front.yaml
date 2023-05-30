@@ -1,0 +1,41 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: front-deployment
+  labels:
+    app: front
+spec:
+  selector:
+    matchLabels:
+      app: front
+  template:
+    metadata:
+      labels:
+        app: front
+    spec:
+      containers:
+      - name: front
+        image: ctdteam5/front
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: REACT_APP_API_BASE_URL
+          value: "http://wallet.e2324cfffd41459e8978.brazilsouth.aksapp.io/api/v1"
+        resources:
+          limits:
+            memory: "128Mi"
+            cpu: "500m"
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: front-service
+spec:
+  type: ClusterIP
+  selector:
+    app: front
+  ports:
+  - protocol: TCP
+    port: 80
+    targetPort: 80
